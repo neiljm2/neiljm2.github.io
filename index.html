@@ -31,51 +31,37 @@
       z-index: 1000;
     }
 
-    /* Dropdown Styling */
-    .dropdown {
-      position: relative;
-      display: inline-block;
+    /* Side-by-Side Nav Links */
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
     }
-    .dropdown-btn {
-      background-color: #2b6cb0;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-    .dropdown-btn:hover {
-      background-color: #2c5282;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background-color: #ffffff;
-      min-width: 180px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-      border-radius: 6px;
-      overflow: hidden;
-      z-index: 1;
-      border: 1px solid #e2e8f0;
-    }
-    .dropdown-content a {
-      color: #2d3748;
-      padding: 12px 16px;
+
+    .nav-link {
+      color: #4a5568;
       text-decoration: none;
-      display: block;
-      font-size: 0.9rem;
-      transition: background-color 0.15s ease;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
     }
-    .dropdown-content a:hover {
-      background-color: #edf2f7;
+
+    .nav-link:hover {
       color: #2b6cb0;
     }
-    .dropdown:hover .dropdown-content {
-      display: block;
+
+    /* Button Style for Resume Link */
+    .nav-link.resume-btn {
+      background-color: #2b6cb0;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-link.resume-btn:hover {
+      background-color: #2c5282;
+      color: #ffffff;
     }
 
     /* --- FULL-WIDTH HERO / ABOUT ME SECTION --- */
@@ -112,7 +98,9 @@
       max-width: 750px;
     }
     .linkedin-link {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
       background-color: #0077b5;
       color: #ffffff;
       padding: 0.5rem 1rem;
@@ -124,6 +112,11 @@
     }
     .linkedin-link:hover {
       opacity: 0.9;
+    }
+    .linkedin-link svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     /* --- TWO-COLUMN CONTENT SECTION --- */
@@ -187,7 +180,10 @@
         text-align: center;
       }
       .content-container {
-        grid-template-columns: 1fr; /* Stack into 1 column on smaller screens */
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        gap: 1rem;
       }
     }
   </style>
@@ -196,14 +192,11 @@
 
   <!-- TOP NAVIGATION BAR -->
   <nav class="navbar">
-    <div class="dropdown">
-      <button class="dropdown-btn">Navigate Site &#9662;</button>
-      <div class="dropdown-content">
-        <a href="#about">About Me</a>
-        <a href="#work-experience">Work Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="assets/resume.pdf" target="_blank">Resume (PDF)</a>
-      </div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#work-experience" class="nav-link">Work Experience</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="assets/resume.pdf" target="_blank" class="nav-link resume-btn">Resume (PDF)</a>
     </div>
   </nav>
 
@@ -212,12 +205,15 @@
     <div class="hero-container">
       <img src="images/profile.jpg" alt="Profile Picture" class="profile-img" />
       <div class="hero-text">
-        <h1>Your Name</h1>
+        <h1>Neil Maushard</h1>
         <p>
           Mechanical & Electrical Engineering student specializing in robotics, embedded systems, and custom fabrication. Passionate about bringing mechanical designs to life through hardware and control systems.
         </p>
-        <a href="https://linkedin.com/in/yourprofile" target="_blank" class="linkedin-link">
-          Connect on LinkedIn &rarr;
+        <a href="https://linkedin.com/in/neil-maushard" target="_blank" class="linkedin-link">
+          Connect on
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+          </svg>
         </a>
       </div>
     </div>
