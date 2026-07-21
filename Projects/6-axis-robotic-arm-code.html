@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source Code Viewer - 6-Axis Robotic Arm</title>
+
+  <!-- Prism.js core CSS & Line Numbers -->
+  <link id="prism-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <style>
+    :root {
+      /* Default: Night Mode */
+      --bg-color: #0f172a;
+      --surface-bg: #1e293b;
+      --navbar-bg: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --primary-color: #60a5fa;
+      --primary-hover: #3b82f6;
+      --card-hover-shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    body.light-mode {
+      /* Overrides for Light Mode */
+      --bg-color: #f7fafc;
+      --surface-bg: #ffffff;
+      --navbar-bg: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --border-color: #e2e8f0;
+      --primary-color: #2b6cb0;
+      --primary-hover: #1d4ed8;
+      --card-hover-shadow: rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-primary);
+      background-color: var(--bg-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- TOP NAVIGATION BAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--navbar-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .back-link:hover {
+      color: var(--primary-color);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+
+    /* --- THEME TOGGLE SWITCH --- */
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 26px;
+      position: relative;
+      width: 50px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: #334155;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .slider:before {
+      background-color: #ffffff;
+      bottom: 2px;
+      content: "";
+      height: 20px;
+      left: 2px;
+      position: absolute;
+      transition: 0.4s;
+      width: 20px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .slider .sun-icon,
+    .slider .moon-icon {
+      font-size: 12px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    input:checked+.slider {
+      background-color: #cbd5e1;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    /* --- VIEWER CONTAINER --- */
+    .viewer-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Tab controls & Toolbar */
+    .viewer-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      padding: 0.75rem 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .tab-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      background-color: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background-color: var(--border-color);
+    }
+
+    .tab-btn.active {
+      color: var(--primary-color);
+      background-color: var(--bg-color);
+      border-color: var(--border-color);
+    }
+
+    /* Copy Button */
+    .action-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background-color 0.2s;
+    }
+
+    .action-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Code Display Area */
+    .code-container {
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      overflow: hidden;
+      flex-grow: 1;
+      position: relative;
+      background-color: #2d2d2d; /* match tomorrow-night default */
+      transition: border-color 0.3s;
+    }
+
+    body.light-mode .code-container {
+      background-color: #f5f2f0; /* match prism-light default */
+    }
+
+    .code-container pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      height: 100%;
+      max-height: 75vh;
+      overflow: auto;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body id="home">
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav class="navbar">
+    <a href="6-axis-robotic-arm.html" class="back-link">&larr; Back to Project</a>
+    <div class="page-title">Code Viewer</div>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider">
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </div>
+      </label>
+    </div>
+  </nav>
+
+  <!-- VIEWER CONTAINER -->
+  <div class="viewer-container">
+    <div class="viewer-toolbar">
+      <div class="tab-group">
+        <button class="tab-btn active" id="arduino-tab" onclick="switchTab('arduino')">
+          CombinedControls.ino (Arduino)
+        </button>
+        <button class="tab-btn" id="python-tab" onclick="switchTab('python')">
+          backend.py (Python)
+        </button>
+      </div>
+      <button class="action-btn" onclick="copyCode()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+        </svg>
+        <span id="copy-btn-text">Copy Code</span>
+      </button>
+    </div>
+
+    <div class="code-container">
+      <pre class="line-numbers"><code id="code-box" class="language-cpp"></code></pre>
+    </div>
+  </div>
+
+  <!-- RAW CODES FOR INLINE LOADING (CORS-free for local file:/// loads) -->
+  <script type="text/plain" id="code-arduino">#include <math.h>
+#define STEP_PIN1 22  // Pin connected to STEP on A4988
+#define DIR_PIN1 23    // Pin connected to DIR on A4988
+#define STEP_PIN2 24  // Pin connected to STEP on A4988
+#define DIR_PIN2 25    // Pin connected to DIR on A4988
+#define STEP_PIN3 26  // Pin connected to STEP on A4988
+#define DIR_PIN3 27  // Pin connected to DIR on A4988
+#define STEP_PIN4 28  // Pin connected to STEP on A4988
+#define DIR_PIN4 29    // Pin connected to DIR on A4988
+#define IN1 7
+#define IN2 6
+#define pwmPin5 3
+#define IN3 10
+#define IN4 11
+#define pwmPin6 9
+#define encPin1 A1
+#define encPin2 A2
+#define encPin3 A3
+#define encPin4 A4
+#define encPin5 A15
+#define encPin6 A6
+
+//Joint limits
+
+float motor1LB = -360.0; //units of degrees
+float motor1UB =  360.0;
+
+float motor2LB = -205.0;
+float motor2UB =  45.0;
+
+float motor3LB = -145.0;
+float motor3UB =  145.0;
+
+float motor4LB = -720.0;
+float motor4UB =  720.0;
+
+float motor5LB = -360.0/360.0;////EDIT FOR DCS
+float motor5UB =  360.0/360.0;
+
+float motor6LB = -360.0/360.0;
+float motor6UB =  360.0/360.0;
+
+//Stepper globals
+bool steppersOff = true; 
+bool motor1Running = false;  // State to track HIGH/LOW for step pulse
+bool motor2Running = false;
+bool motor3Running = false;  // State to track HIGH/LOW for step pulse
+bool motor4Running = false;
+
+const unsigned long clockFreq = 16000000; //Hz
+
+int steps1;
+int steps2;
+int steps3;
+int steps4;
+int mostSteps;
+short mostStepsIndex;
+
+int count1 = 0;
+int count2 = 0;
+int count3 = 0;
+int count4 = 0;
+
+float desPos1; //degrees
+float desPos2; //degrees
+float desPos3; //degrees
+float desPos4; //degrees
+
+float previousDesPos1 = 0.0;
+float previousDesPos2 = 0.0;
+float previousDesPos3 = 0.0;
+float previousDesPos4 = 0.0;
+
+float curPos1; //degrees
+float curPos2; //degrees
+float curPos3; //degrees
+float curPos4; //degrees
+
+float theta1; //degrees
+float theta2; //degrees
+float theta3; //degrees
+float theta4; //degrees
+
+int rot1 = 0;
+int rot2 = 0;
+int rot3 = 0;
+int rot4 = 0;
+
+short steps[4];
+float frequencies[4];
+float timescale; 
+float encZeroes[4] = {0.0, 0.0, 0.0, 0.0};
+
+//DC Globals
+
+const float loopTime = 1; // every X ms, the code enters update_speed()
+int timePassed = 0;
+unsigned long prevMillis = 0; // last time (ms) the code entered update_speed()
+
+bool passZero5 = false;
+bool passZero6 = false;
+
+float currPos5 = 0;
+float desPos5 = 0;
+int currPWM5 = 100; // current++ PWM output
+bool motor5Running = false;
+
+float currPos6 = 0;
+float desPos6 = 0;
+int currPWM6 = 100; // current++ PWM output
+bool motor6Running = false;
+
+int toc = 0;
+int tic = 0;
+
+float error5 = 0;
+float error6 = 0;
+
+int rot5 = 0;
+int rot6 = 0;
+
+float Ki5 = 10;
+float Ki6 = 3.8;
+
+void setup() {
+  // Set STEP and DIR pins as outputs
+  pinMode(STEP_PIN1, OUTPUT);
+  pinMode(DIR_PIN1, OUTPUT);
+  pinMode(STEP_PIN2, OUTPUT);
+  pinMode(DIR_PIN2, OUTPUT);
+  pinMode(STEP_PIN3, OUTPUT);
+  pinMode(DIR_PIN3, OUTPUT);
+  pinMode(STEP_PIN4, OUTPUT);
+  pinMode(DIR_PIN4, OUTPUT);
+  pinMode(encPin1, INPUT);
+  pinMode(encPin2, INPUT);
+  pinMode(encPin3, INPUT);
+  pinMode(encPin4, INPUT);
+  pinMode(34, OUTPUT);
+  pinMode(35, OUTPUT);
+  pinMode(36, OUTPUT);
+  pinMode(37, OUTPUT);
+  digitalWrite(34, HIGH);
+  digitalWrite(35, HIGH);
+  digitalWrite(36, HIGH);
+  digitalWrite(37, HIGH);
+  //DC pin settings
+  pinMode(encPin5, INPUT);
+  pinMode(encPin6, INPUT);
+  pinMode(pwmPin5, OUTPUT);
+  pinMode(pwmPin6, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  readEncoderDC(currPos5, currPos6, desPos5, desPos6);
+  // Set the initial direction (rotate in one direction)
+  digitalWrite(DIR_PIN1, LOW);  // Set stepper direction pin (can be HIGH or LOW)
+  digitalWrite(DIR_PIN2, LOW);
+  digitalWrite(DIR_PIN3, LOW); 
+  digitalWrite(DIR_PIN4, LOW);
+  // Start serial communication for debugging
+  Serial.begin(115200);
+
+  readEncoderStepper(&curPos1, A1, 0.0);
+  readEncoderStepper(&curPos2, A2, 0.0);
+  readEncoderStepper(&curPos3, A3, 0.0);    
+  readEncoderStepper(&curPos4, A4, 0.0);
+  encZeroes[0] = curPos1;
+  encZeroes[1] = curPos2;
+  encZeroes[2] = curPos3;
+  encZeroes[3] = curPos4;
+
+  // Disable interrupts while configuring
+  noInterrupts();
+  //----------------------------------------------------------------------------------------------------
+  // Reset Timer1
+  TCCR1A = 0;  // Normal operation, no PWM
+  TCCR1B = 0;  // Reset Timer1 settings
+  
+  // Set Timer1 in CTC (Clear Timer on Compare Match) mode
+  TCCR1B |= (1 << WGM12);  // CTC Mode
+  TCCR1B |= (1 << CS10) | (1 << CS11);   // Prescaler = 8 (16 MHz timer frequency, 2MHz effective timer frequency)
+
+  // Set OCR1A for the 500 µs HIGH pulse (1000 timer counts)
+  OCR1A = 1000; //init
+  OCR1B = 499;
+  // Enable Timer1 Compare Match A and B interrupts
+  TIMSK1 |= (1 << OCIE1A) | (1<< OCIE1B);
+  //-----------------------------------------------------------------------------------------------------
+  // Reset Timer3 (2)
+  TCCR3A = 0;  // Normal operation, no PWM
+  TCCR3B = 0;  // Reset Timer1 settings
+  
+  // Set Timer3 in CTC (Clear Timer on Compare Match) mode
+  TCCR3B |= (1 << WGM32);  // CTC Mode
+  TCCR3B |= (1<<CS30) | (1 << CS31);   // Prescaler = 8 (16 MHz timer frequency, 2MHz effective timer frequency)
+
+  // Set OCR1A for the 500 µs HIGH pulse (1000 timer counts)
+  OCR3A = 1000; //init
+  OCR3B = 499;
+  // Enable Timer3 Compare Match A and B interrupts
+  TIMSK3 |= (1 << OCIE3A) | (1<< OCIE3B);
+  //-----------------------------------------------------------------------------------------------------
+  // Reset Timer4 (3)
+  TCCR4A = 0;  // Normal operation, no PWM
+  TCCR4B = 0;  // Reset Timer1 settings
+  
+  // Set Timer3 in CTC (Clear Timer on Compare Match) mode
+  TCCR4B |= (1 << WGM42);  // CTC Mode
+  TCCR4B |= (1<<CS40) | (1 << CS41);   // Prescaler = 8 (16 MHz timer frequency, 2MHz effective timer frequency)
+
+  // Set OCR1A for the 500 µs HIGH pulse (1000 timer counts)
+  OCR4A = 1000; //init
+  OCR4B = 499;
+  // Enable Timer4 Compare Match A and B interrupts
+  TIMSK4 |= (1 << OCIE4A) | (1<< OCIE4B);
+  //-----------------------------------------------------------------------------------------------------
+    // Reset Timer3 (2)
+  TCCR5A = 0;  // Normal operation, no PWM
+  TCCR5B = 0;  // Reset Timer1 settings
+  
+  // Set Timer3 in CTC (Clear Timer on Compare Match) mode
+  TCCR5B |= (1 << WGM52);  // CTC Mode
+  TCCR5B |= (1<<CS50) | (1 << CS51);   // Prescaler = 8 (16 MHz timer frequency, 2MHz effective timer frequency)
+
+  // Set OCR1A for the 500 µs HIGH pulse (1000 timer counts)
+  OCR5A = 1000; //init
+  OCR5B = 499;
+  // Enable Timer5 Compare Match A and B interrupts
+  TIMSK5 |= (1 << OCIE5A) | (1<< OCIE5B);
+  //-----------------------------------------------------------------------------------------------------
+  // Enable global interrupts
+  interrupts();
+}
+
+//1----------------------------------------------------------------------------------------------------
+ISR(TIMER1_COMPA_vect) {
+  if (motor1Running) {
+    digitalWrite(STEP_PIN1, HIGH);  // Generate step pulse
+    count1 ++;
+  }
+}
+
+ISR(TIMER1_COMPB_vect) {
+  if (motor1Running) {
+    digitalWrite(STEP_PIN1, LOW);   // End step pulse
+  }
+}
+
+//2----------------------------------------------------------------------------------------------------
+ISR(TIMER3_COMPA_vect) {
+  if (motor2Running) {
+    digitalWrite(STEP_PIN2, HIGH);  // Generate step pulse
+    count2 ++;
+  }
+}
+
+ISR(TIMER3_COMPB_vect) {
+  if (motor2Running) {
+    digitalWrite(STEP_PIN2, LOW);   // End step pulse
+  }
+}
+
+//3----------------------------------------------------------------------------------------------------
+ISR(TIMER4_COMPA_vect) {
+  if (motor3Running) {
+    digitalWrite(STEP_PIN3, HIGH);  // Generate step pulse
+    count3 ++;
+  }
+}
+
+ISR(TIMER4_COMPB_vect) {
+  if (motor3Running) {
+    digitalWrite(STEP_PIN3, LOW);   // End step pulse
+  }
+}
+//4----------------------------------------------------------------------------------------------------
+ISR(TIMER5_COMPA_vect) {
+  if (motor4Running) {
+    digitalWrite(STEP_PIN4, HIGH);  // Generate step pulse
+    count4 ++;
+  }
+}
+
+ISR(TIMER5_COMPB_vect) {
+  if (motor4Running) {
+    digitalWrite(STEP_PIN4, LOW);   // End step pulse
+  }
+}
+
+//-----------------------------------------------------------------------------------------------------
+void loop() {
+  (!motor1Running && !motor2Running && !motor3Running && !motor4Running) ? steppersOff = true : steppersOff = false;
+  timePassed = millis() - timePassed;
+  if (Serial.available() > 0) {
+    parseString();
+    if (steppersOff) { 
+      runSteppers(); //SHOULD TAKE DESPOS1-4, AND SHOULD NOT BE GLOBAL VARIABLES || ALSO ADD A FLAG TO SIGNAL WHEN THIS IS COMPLETE AND CORRECT STEPPERS NEEDS TO RUN
+    }
+  }if(count1 >= steps[0]){
+    motor1Running = false;
+    count1 = 0;
+  }if(count2 >= steps[1]){
+    motor2Running = false;
+    count2 = 0;
+  }if(count3 >= steps[2]){
+    motor3Running = false;
+    count3 = 0;
+  }if(count4 >= steps[3]){
+    motor4Running = false;
+    count4 = 0;
+  }
+  updateDCs();
+}
+
+void parseString(){
+  String command = Serial.readString(); // Read input until newline
+  command.trim();  // Remove any extra spaces or newline characters
+  int commaLoc1 = command.indexOf(',');
+  int commaLoc2 = -1;
+  int commaLoc3 = -1;
+  int commaLoc4 = -1;
+  int commaLoc5 = -1;
+  int commaLoc6 = -1;
+  desPos1 = (command.substring(0, commaLoc1)).toFloat();
+  desPos2 = desPos1;
+  desPos3 = desPos1;
+  desPos4 = desPos1;
+  desPos5 = desPos1;
+  desPos6 = desPos1;
+  if (commaLoc1 != -1){
+    desPos2 = (command.substring(commaLoc1+1, commaLoc2)).toFloat();
+    commaLoc2 = command.indexOf(',', commaLoc1+1);
+  }
+  if (commaLoc2 != -1){
+    desPos3 = (command.substring(commaLoc2+1, commaLoc3)).toFloat();
+    commaLoc3 = command.indexOf(',', commaLoc2+1);
+  }
+  if (commaLoc3 != -1){
+    desPos4 = (command.substring(commaLoc3+1, commaLoc4)).toFloat();
+    commaLoc4 = command.indexOf(',', commaLoc3+1);
+  }
+  if (commaLoc4 != -1){
+    desPos5 = (command.substring(commaLoc4+1, commaLoc5)).toFloat();
+    commaLoc5 = command.indexOf(',', commaLoc4+1);
+  }
+  if (commaLoc5 != -1){
+    desPos6 = (command.substring(commaLoc5+1, commaLoc6)).toFloat();
+    commaLoc6 = command.indexOf(',', commaLoc5+1);
+  }
+}
+
+void runSteppers(){
+  float guess1 = fmod(previousDesPos1*20, 360.0)/20.0;
+  if (guess1 < 0) guess1 += 18;
+  float guess2 = fmod(previousDesPos2*50, 360.0)/50.0;
+  if (guess2 < 0) guess2 += 7.2;
+  float guess3 = fmod(previousDesPos3*20, 360.0)/20.0;
+  if (guess3 < 0) guess3 += 18;
+  float guess4 = fmod(previousDesPos4*20, 360.0)/20.0;
+  if (guess4 < 0) guess4 += 18;
+
+  readEncoderStepper(&curPos1, A1, guess1);
+  previousDesPos1 = desPos1;
+  theta1 = desPos1 - (rot1*(360/20) + curPos1); //find geared angle to move
+
+  readEncoderStepper(&curPos2, A2, guess2);
+  previousDesPos2 = desPos2;
+  theta2 = desPos2 - (rot2*(360/50) + curPos2); //find geared angle to move
+
+  readEncoderStepper(&curPos3, A3, guess3);
+  previousDesPos3 = desPos3;
+  theta3 = desPos3 - (rot3*(360/20) + curPos3); //find geared angle to move
+
+  readEncoderStepper(&curPos4, A4, guess4);
+  previousDesPos4 = desPos4;
+  theta4 = desPos4 - (rot4*(360/20) + curPos4); //find geared angle to move
+
+  if (theta1 > 180.0) theta1 -= 360.0;
+  if (theta1 < -180.0) theta1 += 360.0;
+  if (theta2 > 180.0) theta2 -= 360.0;
+  if (theta2 < -180.0) theta2 += 360.0;
+  if (theta3 > 180.0) theta3 -= 360.0;
+  if (theta3 < -180.0) theta3 += 360.0;
+  if (theta4 > 180.0) theta4 -= 360.0;
+  if (theta4 < -180.0) theta4 += 360.0;
+
+  if (!((rot1*(360/20) + curPos1 + theta1) < motor1UB && (rot1*(360/20) + curPos1 + theta1) > motor1LB)) { //if outside the bound change directions to the correct point 
+    if (theta1 > 0){
+      theta1 -= 360.0; 
+    }
+    else{
+      theta1 += 360.0;
+    }
+  }
+  rot1 = floor((rot1*(360/20) + curPos1 + theta1)*(20.0/360.0)); //find the next rotation value
+
+  if (!((rot2*(360/50) + curPos2 + theta2) < motor2UB && (rot2*(360/50) + curPos2 + theta2) > motor2LB)) { //if outside the bound change directions to the correct point 
+    if (theta2 > 0){
+      theta2 -= 360.0; 
+    }
+    else{
+      theta2 += 360.0;
+    }
+  }
+  rot2 = floor((rot2*(360/50) + curPos2 + theta2)*(50.0/360.0)); //find the next rotation value
+
+  if (!((rot3*(360/20) + curPos3 + theta3) < motor3UB && (rot3*(360/20) + curPos3 + theta3) > motor3LB)) { //if outside the bound change directions to the correct point 
+    if (theta3 > 0){
+      theta3 -= 360.0; 
+    }
+    else{
+      theta3 += 360.0;
+    }
+  }
+  rot3 = floor((rot3*(360/20) + curPos3 + theta3)*(20.0/360.0)); //find the next rotation value
+
+  if (!((rot4*(360/20) + curPos4 + theta4) < motor4UB && (rot4*(360/20) + curPos4 + theta4) > motor4LB)) { //if outside the bound change directions to the correct point 
+    if (theta4 > 0){
+      theta4 -= 360.0; 
+    }
+    else{
+      theta4 += 360.0;
+    }
+  }
+  rot4 = floor((rot4*(360/20) + curPos4 + theta4)*(20.0/360.0)); //find the next rotation value
+
+  digitalWrite(DIR_PIN1, (theta1 >= 0) ? LOW : HIGH);
+  digitalWrite(DIR_PIN2, (theta2 >= 0) ? LOW : HIGH);
+  digitalWrite(DIR_PIN3, (theta3 >= 0) ? LOW : HIGH);
+  digitalWrite(DIR_PIN4, (theta4 >= 0) ? LOW : HIGH);
+  steps[0] = short((abs(theta1)*20.0)/1.8); 
+  steps[1] = short((abs(theta2)*50.0)/1.8); 
+  steps[2] = short((abs(theta3)*20.0)/1.8);
+  steps[3] = short((abs(theta4)*20.0)/1.8);
+  mostSteps = steps[0];
+  mostStepsIndex = 0;
+  for (int i=1; i<4; i++){
+    if (steps[i] > mostSteps){
+      mostSteps = steps[i];
+      mostStepsIndex = i;
+    }
+  }
+  frequencies[mostStepsIndex] = 500;
+  timescale = mostSteps/frequencies[mostStepsIndex];
+
+  if (timescale != 0){
+    for (int i = 0; i<4; i++){
+      if (i != mostStepsIndex){
+        if (steps[i] != 0) {
+          frequencies[i] = steps[i]/timescale;
+        } else frequencies[i] = 500;
+      } 
+    }
+    noInterrupts();
+    OCR1A = calcOCRA(frequencies[0], 32);
+    OCR3A = calcOCRA(frequencies[1], 32);
+    OCR4A = calcOCRA(frequencies[2], 32); 
+    OCR5A = calcOCRA(frequencies[3], 32);
+    interrupts();
+    if (steps[0] > 0) motor1Running = true;
+    if (steps[1] > 0) motor2Running = true;
+    if (steps[2] > 0) motor3Running = true;
+    if (steps[3] > 0) motor4Running = true;
+  }
+  Serial.println("Motors started.");
+  
+  Serial.println("DESIRED");
+  Serial.println(desPos1);
+  Serial.println(desPos2);
+  Serial.println(desPos3);
+  Serial.println("CURRENT");
+  Serial.println(curPos1);
+  Serial.println(curPos2);
+  Serial.println(curPos3);
+  Serial.println("ROTATIONS");
+  Serial.println(rot1);
+  Serial.println(rot2);
+  Serial.println(rot3);
+  Serial.println("STEPS");
+  Serial.println(steps[0]);
+  Serial.println(steps[1]);
+  Serial.println(steps[2]);
+  
+}
+
+void updateDCs(){
+  //Serial.println("Updating DCs");
+  float newPos5;
+  float newPos6;
+  readEncoderDC(newPos5, newPos6, desPos5, desPos6);
+  
+  if(newPos5 != 0){
+    passZero5 = ((abs(abs(newPos5) - abs(currPos5)) > 100) ? true : false); //If we switched signs, passZero is true
+  }
+  if(newPos6 != 0){
+    passZero6 = ((abs(abs(newPos6) - abs(currPos6)) > 100) ? true : false);
+  }
+  
+  if(passZero5){
+    (newPos5>currPos5) ? (rot5 -= 1) : (rot5 += 1);
+  }
+  if(passZero6){
+    (newPos6>currPos6) ? (rot6 -= 1) : (rot6 += 1);
+  }
+  
+  currPos5 = newPos5;
+  currPos6 = newPos6;
+  motor5Running = true; //End conditions
+  motor6Running = true;
+
+  error5 = desPos5 - currPos5; //position error
+  if (error5 > 180.0) error5 -= 360.0;  // Ensure shortest path
+  if (error5 < -180.0) error5 += 360.0;
+  
+  if(error5>0){ //If we're rotating CW
+    if(currPos5+error5 >= 360.0){ //If we pass zero
+      if(rot5>1) error5 -= 360.0; //If passing zero is not ok, make the error the other way
+    }
+  }else{ //If we're rotating CCW
+    if(currPos5+error5 <= 0.0){ //If we pass zero
+      if(rot5<-1) error5 += 360.0; //If passing zero is not ok, make the error the other way
+    }
+  }
+  
+  error6 = desPos6-currPos6; //position error
+  if (error6 > 180.0) error6 -= 360.0;  // Ensure shortest path
+  if (error6 < -180.0) error6 += 360.0;
+  
+  if(error6>0.0){ //If we're rotating CW
+    if(currPos6+error6 >= 360.0){ //If we will pass zero
+      if(rot6>1) error6 -= 360.0;//If passing zero is not ok, make the error the other way
+    }
+  }else{ //If we're rotating CCW
+    if(currPos6+error6 <= 0.0){ //If we pass zero
+      if(rot6<-1) error6 += 360.0; //If passing zero is not ok, make the error the other way
+    }
+  }
+  
+  //End conditions
+  if (abs(error5) < 8.0) {
+    digitalWrite(IN1, 1);
+    digitalWrite(IN2, 1);
+    currPWM5 = 0;
+    analogWrite(pwmPin5, abs(currPWM5));
+    motor5Running = false;
+  }
+  if (abs(error6) < 10.0) {
+    digitalWrite(IN3, 1);
+    digitalWrite(IN4, 1);
+    currPWM6 = 0;
+    analogWrite(pwmPin6, abs(currPWM6)); //CHECK
+    motor6Running = false;
+  }
+  //Only adjust motor 5 if it hasn't hit the target yet
+  if(motor5Running){
+    currPWM5 = Ki5*error5;
+    if (currPWM5 >= 255) currPWM5 = 255;
+    if (currPWM5 <= -255) currPWM5 = -255;
+    if (currPWM5 <= 0) {
+      digitalWrite(IN1, 0);
+      digitalWrite(IN2, 1);
+      analogWrite(pwmPin5, abs(currPWM5));
+    } else {
+      digitalWrite(IN1, 1);
+      digitalWrite(IN2, 0);
+      analogWrite(pwmPin5,abs(currPWM5));
+    }
+  }
+
+  //Only adjust motor 6 if it hasn't hit the target yet
+  if(motor6Running){
+    currPWM6 = Ki6*error6;
+    if (currPWM6 >= 255) {currPWM6 = 255;}
+    if (currPWM6 <= -255) {currPWM6 = -255;}
+    if (currPWM6 <= 0) {
+      digitalWrite(IN3, 1);
+      digitalWrite(IN4, 0);
+      analogWrite(pwmPin6,abs(currPWM6));
+    } else {
+      digitalWrite(IN3, 0);
+      digitalWrite(IN4, 1);
+      analogWrite(pwmPin6,abs(currPWM6));
+    }
+  }
+}
+
+int calcOCRA(float freq, int prescale){
+  float OCRA = ((clockFreq/(freq*prescale)) - 1);
+  if(OCRA > 65535){
+    OCRA = 65535;
+  }
+  return OCRA;
+}
+
+float readEncoderStepper(float* currentPos, int analogPin, float guess){
+  float checkVal;
+  switch (analogPin) {
+      case A1:
+        *currentPos = ((((analogRead(analogPin))/1023.0)*(360.0))/20.0) - encZeroes[0]; //
+        if (*currentPos < 0) *currentPos += 18;
+        checkVal = (abs(*currentPos - guess)*20.0); //MAKE SURE THAT currentPos AND guess are both between 0 and 18 when checking them, BUT THEY MUST RETURN TO THEIR ACTUAL VALUE AFTER THIS
+        if (checkVal < 7.2 || checkVal > 352.8) *currentPos = guess; //compare TEMP to guess and then edit current pos
+        break;
+      case A2:
+        *currentPos = ((((analogRead(analogPin))/1023.0)*(360.0))/50.0) - encZeroes[1]; //
+        if (*currentPos < 0) *currentPos += 7.2;
+        checkVal = (abs(*currentPos - guess)*50.0);
+        if (checkVal < 7.2 || checkVal > 352.8) *currentPos = guess;
+        break;
+      case A3:
+        *currentPos = ((((analogRead(analogPin))/1023.0)*(360.0))/20.0) - encZeroes[2]; //
+        if (*currentPos < 0) *currentPos += 18;
+        checkVal = (abs(*currentPos - guess)*20.0);
+        if (checkVal < 7.2 || checkVal > 352.8) *currentPos = guess;
+        break;
+      case A4:
+        *currentPos = ((((analogRead(analogPin))/1023.0)*(360.0))/20.0) - encZeroes[3]; //
+        if (*currentPos < 0) *currentPos += 18;
+        checkVal = (abs(*currentPos - guess)*20.0);
+        if (checkVal < 7.2 || checkVal > 352.8) *currentPos = guess;
+        break;
+  }
+}
+
+void print_motor_info(){
+  //print current position, desired position, error, and pwm value
+  Serial.println("currPos desPos error pwm rot");
+  Serial.println(String(currPos5) + " " + String(desPos5) + " " + String(error5) + " " + String(currPWM5) + " " + String(rot5));
+  Serial.println(String(currPos6) + " " + String(desPos6) + " " + String(error6) + " " + String (currPWM6) + " " + String(rot6));
+}
+
+float readEncoderDC(float &num1, float &num2, float guess1, float guess2){
+  float checkVal1;
+  float checkVal2;
+  int raw_value = analogRead(encPin5);
+  num1 = (raw_value/1023.0)*(360.0);
+  if (guess1 < 0) guess1 += 360;
+  checkVal1 = abs(num1 - guess1);
+  if (checkVal1 < 1.8 || checkVal1 > 358.2) num1 = guess1;
+  if (num1 == 0.0) num1+=0.01;
+  int raw_value2 = analogRead(encPin6);
+  num2 = (raw_value2/1023.0)*(360.0);
+  if (guess2 < 0) guess2 += 360;
+  checkVal2 = abs(num2 - guess2);
+  if (checkVal2 < 1.8 || checkVal2 > 358.2) num2 = guess2;
+  if (num2 == 0.0) num2 += 0.01;
+}</script>
+  <script type="text/plain" id="code-python">import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+from scipy.optimize import least_squares
+import config
+
+# Unpack robot dimensions and home position from config
+h, L1, offset1, L2, offset2, L3, offset3, L4, offset4, L5, offset5, L6 = config.LENGTHS
+home_position = config.ANGLES  # assumed to be a 6-element list/array
+
+def customIK3D(target, guess):
+    """
+    Custom inverse kinematics solver for a 3D target.
+    Decouples the base rotation from the planar solution.
+    
+    Parameters
+    ----------
+    target : array-like
+        A 3D target point [x, y, z].
+    guess : array-like
+        A 6-element initial guess for joint angles (in radians).
+    
+    Returns
+    -------
+    solution : np.ndarray
+        A 6-element array of joint angles [θ₁, θ₂, θ₃, θ₄, θ₅, θ₆],
+        where θ₁ handles the base rotation and θ₂-θ₄ are computed via least squares.
+        For this demo, joints 5 and 6 are set to zero.
+    """
+    x, y, z = target
+    # Compute the base rotation (θ₁) from the target's x and y.
+    theta1 = np.arctan2(y, x)
+    
+    # Effective horizontal distance in the plane
+    r = np.sqrt(x**2 + y**2)
+    # The planar target that the remaining joints must reach:
+    #   r should equal: L1 + L2*cos(-θ₂) + L3*cos(-θ₂+θ₃) + (L5+offset4)*cos(-θ₂+θ₃-θ₄)
+    #   z should equal: h  + L2*sin(-θ₂) + L3*sin(-θ₂+θ₃) + (L5+offset4)*sin(-θ₂+θ₃-θ₄)
+    target_planar = np.array([r, z])
+    
+    def residual(thetas):
+        theta2, theta3, theta4 = thetas
+        x_guess = L1 + L2*np.cos(-theta2) + L3*np.cos(-theta2+theta3) + (L5+offset4)*np.cos(-theta2+theta3-theta4)
+        z_guess = h  + L2*np.sin(-theta2) + L3*np.sin(-theta2+theta3) + (L5+offset4)*np.sin(-theta2+theta3-theta4)
+        return np.array([x_guess - target_planar[0], z_guess - target_planar[1]])
+    
+    # Use the provided guess for the planar joints (θ₂, θ₃, θ₄)
+    planar_guess = guess[1:4]
+    # Set bounds (adjust these as needed for your robot's joint limits)
+    bounds_lower = [-41*np.pi/36, -np.pi, -np.pi]
+    bounds_upper = [ 5*np.pi/36,  np.pi,  np.pi]
+    result = least_squares(residual, planar_guess, bounds=(bounds_lower, bounds_upper))
+    theta2, theta3, theta4 = result.x
+    
+    # For joints 5 and 6, set zero for this demo.
+    theta5 = 0.0
+    theta6 = 0.0
+    return np.array([theta1, theta2, theta3, theta4, theta5, theta6])
+
+def create_command_from_angles(joint_angles_list):
+    """
+    Creates a command string from a list of joint angle sets.
+    The command format is assumed to be:
+      /S*H*/M*<angles1>/M*<angles2> ... /E*X,<home_angles>*
+    Angles are output in degrees, comma-separated.
+    """
+    command = "/S*H*"
+    command += "/M*"
+    for angles in joint_angles_list:
+        # Convert each angle from radians to degrees
+        for theta in angles:
+            command += str(round(theta * 180 / np.pi, 2)) + ","
+    command = command.rstrip(",")
+    command += "*/E*X,"
+    for theta in home_position:
+        command += str(round(theta, 2)) + ","
+    command = command.rstrip(",") + "*"
+    return command
+
+def demo_motion_3d():
+    """
+    Demonstrates a 3D motion by moving the robot to six different target points.
+    The customIK3D function is used to compute a 6-DOF solution for each target.
+    
+    Returns
+    -------
+    command : str
+        A command string that concatenates the computed joint angle sets.
+    target_points : list of np.ndarray
+        The list of 3D target points.
+    joint_angles_sequence : list of np.ndarray
+        The corresponding joint angle solutions for each target.
+    """
+    # Define six target points in 3D space.
+    # These points are examples and should span a large portion of the robot's workspace.
+    target_points = [
+        np.array([L1 + L2 + L3,    0,     h + 5]),      # Straight ahead, high
+        np.array([L1 + L2,         L2,    h + 2]),      # Front-right, medium
+        np.array([L1 + L2,        -L2,    h + 3]),      # Front-left, medium
+        np.array([L1 + L2/2,       L2/2,  h + 1]),      # Closer, lower
+        np.array([L1 + L2/2,      -L2/2,  h + 4]),      # Closer, higher
+        np.array([L1 + L2 + L3/2,   0,     h + 2])       # Extended reach, medium height
+    ]
+    
+    # Start with the home position as the initial guess.
+    current_guess = np.array(home_position)
+    joint_angles_sequence = []
+    
+    for pt in target_points:
+        solution = customIK3D(pt, current_guess)
+        joint_angles_sequence.append(solution)
+        current_guess = solution  # update guess for better convergence
+    
+    command = create_command_from_angles(joint_angles_sequence)
+    return command, target_points, joint_angles_sequence
+
+# Run the demo
+command_string, targets, solutions = demo_motion_3d()
+print("Command String for 3D Motion Demo:")
+print(command_string)
+
+# --- 3D Plotting of the target points for visualization ---
+fig = plt.figure(figsize=(10,8))
+ax = fig.add_subplot(111, projection='3d')
+targets_array = np.array(targets)
+ax.plot(targets_array[:,0], targets_array[:,1], targets_array[:,2],
+        marker='o', linestyle='-', color='b', label='Motion Path')
+for idx, pt in enumerate(targets):
+    ax.text(pt[0], pt[1], pt[2], f'P{idx+1}', color='red', fontsize=12)
+ax.set_title("3D Motion Demo: Target Points")
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+ax.legend()
+plt.show()</script>
+
+  <!-- Prism JS and Components -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+  <script>
+    // Global active file state
+    let activeFile = 'arduino';
+
+    // Toggle theme switcher logic (synced with localStorage & url param)
+    const toggleSwitch = document.querySelector('#checkbox');
+
+    function updatePrismTheme(isLight) {
+      const themeLink = document.getElementById('prism-theme');
+      if (isLight) {
+        themeLink.href = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css";
+      } else {
+        themeLink.href = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css";
+      }
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlTheme = urlParams.get('theme');
+    const localTheme = localStorage.getItem('theme');
+
+    let activeTheme = 'dark';
+    if (urlTheme === 'light' || urlTheme === 'dark') {
+      activeTheme = urlTheme;
+    } else if (localTheme === 'light' || localTheme === 'dark') {
+      activeTheme = localTheme;
+    }
+
+    const isLight = (activeTheme === 'light');
+    document.body.classList.toggle('light-mode', isLight);
+    toggleSwitch.checked = isLight;
+    updatePrismTheme(isLight);
+
+    function syncLinks(theme) {
+      document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+          const parts = href.split('?');
+          const basePath = parts[0];
+          const searchParams = new URLSearchParams(parts[1] || '');
+          searchParams.set('theme', theme);
+          link.setAttribute('href', basePath + '?' + searchParams.toString());
+        }
+      });
+    }
+
+    syncLinks(activeTheme);
+
+    toggleSwitch.addEventListener('change', (e) => {
+      const nextLight = e.target.checked;
+      const theme = nextLight ? 'light' : 'dark';
+
+      document.body.classList.toggle('light-mode', nextLight);
+      localStorage.setItem('theme', theme);
+      updatePrismTheme(nextLight);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('theme', theme);
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+
+      syncLinks(theme);
+    });
+
+    // Code Switcher logic
+    function switchTab(fileType) {
+      activeFile = fileType;
+      const codeBox = document.getElementById('code-box');
+      const arduinoTab = document.getElementById('arduino-tab');
+      const pythonTab = document.getElementById('python-tab');
+
+      if (fileType === 'arduino') {
+        arduinoTab.classList.add('active');
+        pythonTab.classList.remove('active');
+        codeBox.className = 'language-cpp';
+        codeBox.textContent = document.getElementById('code-arduino').textContent;
+      } else if (fileType === 'python') {
+        pythonTab.classList.add('active');
+        arduinoTab.classList.remove('active');
+        codeBox.className = 'language-python';
+        codeBox.textContent = document.getElementById('code-python').textContent;
+      }
+
+      // Re-run Prism highlighting
+      Prism.highlightElement(codeBox);
+    }
+
+    // Copy to clipboard logic
+    function copyCode() {
+      const codeText = document.getElementById('code-box').textContent;
+      const btnText = document.getElementById('copy-btn-text');
+
+      navigator.clipboard.writeText(codeText).then(() => {
+        btnText.textContent = "Copied!";
+        setTimeout(() => {
+          btnText.textContent = "Copy Code";
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+
+    // Load active tab on page start based on URL parameter or default
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fileParam = urlParams.get('file');
+
+      if (fileParam === 'python') {
+        switchTab('python');
+      } else {
+        switchTab('arduino');
+      }
+    });
+  </script>
+
+</body>
+
+</html>
