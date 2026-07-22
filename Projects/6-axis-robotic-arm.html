@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>6-Axis Robotic Arm - Project Details</title>
+  <!-- Import the model-viewer element for 3D model rendering -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   <style>
     :root {
       /* Default: Night Mode */
@@ -431,6 +433,15 @@
 
     <!-- CENTER: Main Content (Scrollable Images and Text) -->
     <section class="project-content">
+
+      <!-- Interactive 3D Model Viewer -->
+      <div class="media-container" style="height: 450px;">
+        <model-viewer src="../projects/6-Axis/full_robot.glb" alt="3D CAD model of the 6-Axis Robotic Arm" auto-rotate
+          camera-controls shadow-intensity="1" environment-image="neutral"
+          style="width: 100%; height: 100%; background-color: var(--img-bg); border-radius: 6px;">
+        </model-viewer>
+        <p class="media-caption">Interactive 3D CAD Assembly (Click and drag to rotate, scroll to zoom).</p>
+      </div>
 
       <!-- Media Block 1 -->
       <div class="media-container">
