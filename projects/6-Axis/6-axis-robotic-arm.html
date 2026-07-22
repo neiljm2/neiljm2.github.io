@@ -316,6 +316,14 @@
       display: block;
     }
 
+    .media-container img,
+    .media-container video {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+    }
+
     .media-caption {
       text-align: center;
       font-size: 0.85rem;
@@ -443,64 +451,133 @@
         <p class="media-caption">Interactive 3D CAD Assembly (Click and drag to rotate, scroll to zoom).</p>
       </div>
 
-      <!-- Media Block 1 -->
-      <div class="media-container">
-        <svg viewBox="0 0 800 450" class="placeholder-svg">
-          <rect width="100%" height="100%" fill="var(--img-bg)" />
-          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="24"
-            fill="var(--text-secondary)">[ Project Hero Image / Video Demo ]</text>
-        </svg>
-        <p class="media-caption">Figure 1: Fully assembled custom 6-axis robotic manipulator undergoing range of motion
-          tests.</p>
-      </div>
-
-      <!-- Scrollable Text Details -->
+      <!-- Project Overview -->
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <p>
-          This project involved building a custom 6-axis robotic arm from the ground up, starting from structural design
-          in CAD to routing motor controller boards and writing real-time control algorithms. The primary test task
-          was navigating the end-effector smoothly through a constrained space.
+          This project involved building a custom 6-axis robotic arm from the ground up, starting from structural design in CAD to routing motor controller boards and writing real-time control algorithms. The primary goal was to navigate the end-effector smoothly through a constrained space.
         </p>
+      </article>
 
-        <h2>Mechanical & Electrical Build</h2>
+      <!-- Media Card 1: Initial Mechanical Assembly -->
+      <div class="media-container">
+        <img src="../projects/6-Axis/hardware_before_electronics.jpg" alt="Hardware assembly before electronics" />
+        <p class="media-caption">Figure 1: Initial mechanical assembly of the robotic arm structural linkages before routing electrical systems.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Mechanical Design & Assembly</h2>
         <p>
-          The arm was modeled in SolidWorks, factoring in structural strength, rotational limits, and weight
-          distribution.
-          High-torque servo actuators drive the primary joints, powered by a customized distribution board.
+          The arm was modeled in SolidWorks, factoring in structural strength, rotational limits, and weight distribution. The linkages were custom 3D-printed using robust infill patterns and reinforced with custom aluminum support brackets to withstand dynamic loads.
         </p>
+      </article>
 
-        <!-- Media Block 2 -->
-        <div class="media-container">
-          <svg viewBox="0 0 800 450" class="placeholder-svg">
-            <rect width="100%" height="100%" fill="var(--img-bg)" />
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="24"
-              fill="var(--text-secondary)">[ CAD Model or Assembly Close-up ]</text>
-          </svg>
-          <p class="media-caption">Figure 2: 3D CAD schematic of structural linkages and axis configurations.</p>
-        </div>
+      <!-- Media Card 2: Wiring in Progress (WIP) -->
+      <div class="media-container">
+        <img src="../projects/6-Axis/messy_WIP.jpg" alt="Wiring work in progress" />
+        <p class="media-caption">Figure 2: Wiring harness assembly and breadboarding of stepper drivers during prototype testing.</p>
+      </div>
 
-        <h2>Control Architecture</h2>
+      <article class="scrollable-details">
+        <h2>Electrical Integration</h2>
         <p>
-          The arm operates on dynamic control schemes implemented on a custom microcontroller stack:
+          Wiring up a 6-axis manipulator requires careful cable routing to prevent binding and wire strain during motion. Custom power buses and driver boards were wired to step down the supply voltage and isolate logic control lines from motor drivers.
         </p>
-        <ul>
-          <li><strong>Joint-Space Control:</strong> Executes rapid, collision-free moves between coordinate points.</li>
-          <li><strong>Task-Space Control:</strong> Directs coordinates in Cartesian space to follow precise vector
-            paths.</li>
-          <li><strong>PID Feedback:</strong> Regulates system actuators with custom tuning parameters for optimal
-            stabilization.</li>
-        </ul>
+      </article>
 
-        <!-- Media Block 3 -->
-        <div class="media-container">
-          <svg viewBox="0 0 800 450" class="placeholder-svg">
-            <rect width="100%" height="100%" fill="var(--img-bg)" />
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="24"
-              fill="var(--text-secondary)">[ Control Block Diagram or Code snippet ]</text>
-          </svg>
-          <p class="media-caption">Figure 3: Graphical block representation of the inverse kinematics solver loop.</p>
-        </div>
+      <!-- Media Card 3: Custom Motor Leads -->
+      <div class="media-container">
+        <img src="../projects/6-Axis/CuteLeadsPhoto.jpg" alt="Custom motor leads photo" />
+        <p class="media-caption">Figure 3: Cleaned custom motor leads and cable bundles routed through joint sleeves.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Cable Management Optimization</h2>
+        <p>
+          To ensure reliability, the temporary prototyping wires were replaced with structured cable bundles. Using braided sleeves and custom-soldered leads routed through the hollow axes of the joints, the cable management was optimized to minimize rotational resistance.
+        </p>
+      </article>
+
+      <!-- Media Card 4: First Motion Test -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline>
+          <source src="../projects/6-Axis/arm_spinning_jank.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 4: First dynamic test run demonstrating stepper rotation speeds and joint limits.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>First Motion Calibration</h2>
+        <p>
+          With hardware and electrical systems finalized, the initial controller code was loaded to check basic actuator functionality. The first motion tests revealed rotational offsets and inertial jitter, which were mitigated by introducing acceleration profiling.
+        </p>
+      </article>
+
+      <!-- Media Card 5: Coordinated Joint Movements -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline>
+          <source src="../projects/6-Axis/outer_joints_moving.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 5: Coordinated joint movement testing demonstrating multi-axis velocity synchronization.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Control Loop Tuning</h2>
+        <p>
+          To coordinate complex, multi-joint trajectories, a joint-space control loop was implemented. By reading real-time encoder values, the microcontroller synchronized the stepper frequencies dynamically, enabling smoother arcs and path tracking.
+        </p>
+      </article>
+
+      <!-- Media Card 6: Gripper Testing -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline>
+          <source src="../projects/6-Axis/short_move_w_grabber.MOV" type="video/quicktime">
+          <source src="../projects/6-Axis/short_move_w_grabber.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 6: Custom-designed end-effector gripper executing a simple pick-and-place task.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>End-Effector Integration</h2>
+        <p>
+          The final link of the arm is a custom-actuated gripper designed to pick and place objects. Servos drive the grabber plates, requiring fine-grained task-space controls to coordinate cartesian end-effector positioning with the gripper actuation states.
+        </p>
+      </article>
+
+      <!-- Media Card 7: Successful Path Completion -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline>
+          <source src="../projects/6-Axis/GoodVideo1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 7: The robotic manipulator smoothly completing its trajectory path without drift or collision.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Trajectory Optimization & Success</h2>
+        <p>
+          By combining joint-space moves, cartesian task-space pathing, and customized feedback regulation, the arm achieved stable path tracking accuracy. The trajectory optimization solved the inverse kinematics solver loop in real-time, completing the physical course.
+        </p>
+      </article>
+
+      <!-- Media Card 8: High Speed Success Demo -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline>
+          <source src="../projects/6-Axis/GoodMovingVideoAndCOlleeenHappy.MOV" type="video/quicktime">
+          <source src="../projects/6-Axis/GoodMovingVideoAndCOlleeenHappy.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 8: Coordinated speed test illustrating complete control stability at accelerated velocities.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Performance Evaluation</h2>
+        <p>
+          Finally, the manipulator was tested under high speed and loaded conditions to locate physical stress limits. The system maintained dynamic tracking stability and structural integrity, proving the feasibility of custom low-cost robot manipulator designs.
+        </p>
       </article>
 
     </section>
