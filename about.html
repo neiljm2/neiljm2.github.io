@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Me - Neil Maushard</title>
+  <style>
+    :root {
+      /* Default: Night Mode */
+      --bg-color: #0f172a;
+      --surface-bg: #1e293b;
+      --navbar-bg: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --primary-color: #60a5fa;
+      --primary-hover: #3b82f6;
+      --card-hover-shadow: rgba(0, 0, 0, 0.4);
+      --img-bg: #1e293b;
+    }
+
+    body.light-mode {
+      /* Overrides for Light Mode */
+      --bg-color: #f7fafc;
+      --surface-bg: #ffffff;
+      --navbar-bg: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --border-color: #e2e8f0;
+      --primary-color: #2b6cb0;
+      --primary-hover: #1d4ed8;
+      --card-hover-shadow: rgba(0, 0, 0, 0.08);
+      --img-bg: #edf2f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- TOP NAVIGATION BAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--navbar-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .nav-link.resume-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link.resume-btn:hover {
+      background-color: var(--primary-hover);
+      color: #ffffff;
+    }
+
+    /* --- THEME TOGGLE SWITCH --- */
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 26px;
+      position: relative;
+      width: 50px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: #334155;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .slider:before {
+      background-color: #ffffff;
+      bottom: 2px;
+      content: "";
+      height: 20px;
+      left: 2px;
+      position: absolute;
+      transition: 0.4s;
+      width: 20px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .slider .sun-icon,
+    .slider .moon-icon {
+      font-size: 12px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    input:checked+.slider {
+      background-color: #cbd5e1;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    /* --- ABOUT CONTENT --- */
+    .about-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: start;
+      flex-grow: 1;
+    }
+
+    .about-text-column h1 {
+      font-size: 3rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+    }
+
+    .about-text-column p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    /* --- COLLAGE SCAPBOOK STYLE --- */
+    /* --- COLLAGE SCAPBOOK STYLE (MASONRY) --- */
+    .collage-grid {
+      column-count: 2;
+      column-gap: 1rem;
+      width: 100%;
+    }
+
+    .collage-card {
+      break-inside: avoid;
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid var(--surface-bg);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      background-color: var(--surface-bg);
+    }
+
+    .collage-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .collage-card:hover {
+      transform: scale(1.03) translateY(-4px);
+      box-shadow: 0 15px 30px var(--card-hover-shadow);
+      z-index: 10;
+      border-color: var(--primary-color);
+    }
+
+    /* Mobile Responsive styling */
+    @media (max-width: 900px) {
+      .about-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        margin: 2rem auto;
+      }
+      
+      .about-text-column h1 {
+        font-size: 2.5rem;
+      }
+
+      .collage-grid {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .collage-grid {
+        column-count: 1;
+      }
+    }
+  </style>
+</head>
+
+<body id="home">
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider">
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </div>
+      </label>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About Me</a>
+      <a href="index.html#work-experience" class="nav-link">Work Experience</a>
+      <a href="index.html#projects" class="nav-link">Projects</a>
+      <a href="resume.pdf" target="_blank" class="nav-link resume-btn">Resume (PDF)</a>
+    </div>
+  </nav>
+
+  <!-- ABOUT ME MAIN LAYOUT -->
+  <main class="about-container">
+    
+    <!-- LEFT SIDE: Text Column -->
+    <div class="about-text-column">
+      <h1>About Me</h1>
+      <p>
+        Hi, I'm Neil Maushard! I am a mechanical engineering student passionate about bringing mechanical systems to life through hands-on fabrication, embedded control architectures, and custom programming. Working at the intersection of mechanical components, sensor electronics, and control algorithms is what drives my design engineering interests.
+      </p>
+      <p>
+        Beyond CAD models and microcontrollers, I love learning through travel and outdoor exploration. Whether it is camping with friends, trekking to scenic waterfalls, or diving into new cultures and street food scenes, I thrive on exploring the world from fresh perspectives. This same curiosity and hands-on approach shape how I tackle structural design and software engineering challenges.
+      </p>
+    </div>
+
+    <!-- RIGHT SIDE: Collage Column -->
+    <div class="collage-grid">
+      <div class="collage-card item-1">
+        <img src="images/aboutme_headshot.JPEG" alt="Neil's Headshot" />
+      </div>
+      <div class="collage-card item-2">
+        <img src="images/aboutme_fam.JPEG" alt="Neil with Family" />
+      </div>
+      <div class="collage-card item-3">
+        <img src="images/aboutme_campfire.JPEG" alt="Campfire under stars" />
+      </div>
+      <div class="collage-card item-4">
+        <img src="images/aboutme_pointing.JPEG" alt="Neil outdoor pointing" />
+      </div>
+      <div class="collage-card item-5">
+        <img src="images/aboutme_koreacarrot.jpeg" alt="Neil in Korea with carrot character" />
+      </div>
+      <div class="collage-card item-6">
+        <img src="images/aboutme_koreastreetfood.jpeg" alt="Exploring Korea street food" />
+      </div>
+      <div class="collage-card item-7">
+        <img src="images/aboutme_waterfall.jpeg" alt="Scenic waterfall trail hike" />
+      </div>
+    </div>
+
+  </main>
+
+  <!-- THEME SYNC SCRIPT -->
+  <script>
+    const toggleSwitch = document.querySelector('#checkbox');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlTheme = urlParams.get('theme');
+    const localTheme = localStorage.getItem('theme');
+
+    let activeTheme = 'dark';
+    if (urlTheme === 'light' || urlTheme === 'dark') {
+      activeTheme = urlTheme;
+    } else if (localTheme === 'light' || localTheme === 'dark') {
+      activeTheme = localTheme;
+    }
+
+    const isLight = (activeTheme === 'light');
+    document.body.classList.toggle('light-mode', isLight);
+    toggleSwitch.checked = isLight;
+
+    function syncLinks(theme) {
+      document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+          const parts = href.split('?');
+          const basePath = parts[0];
+          const searchParams = new URLSearchParams(parts[1] || '');
+          searchParams.set('theme', theme);
+          link.setAttribute('href', basePath + '?' + searchParams.toString());
+        }
+      });
+    }
+
+    syncLinks(activeTheme);
+
+    toggleSwitch.addEventListener('change', (e) => {
+      const nextLight = e.target.checked;
+      const theme = nextLight ? 'light' : 'dark';
+
+      document.body.classList.toggle('light-mode', nextLight);
+      localStorage.setItem('theme', theme);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('theme', theme);
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+
+      syncLinks(theme);
+    });
+  </script>
+
+</body>
+
+</html>
