@@ -255,12 +255,13 @@
 
     /* --- TWO-COLUMN CONTENT SECTION --- */
     .content-container {
-      max-width: 1100px;
+      max-width: 1280px;
       margin: 2.5rem auto;
       padding: 0 1.5rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 280px;
       gap: 2rem;
+      align-items: start;
     }
 
     .column h2 {
@@ -272,14 +273,19 @@
       transition: color 0.3s ease, border-color 0.3s ease;
     }
 
-    /* --- CLICKABLE CARD STYLING --- */
+    /* --- PROJECTS GRID & 2/3 SCALED CARDS --- */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
     .card {
       display: block;
       background: var(--surface-bg);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 1.5rem;
       text-decoration: none;
       color: inherit;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
@@ -290,50 +296,104 @@
       box-shadow: 0 10px 15px -3px var(--card-hover-shadow), 0 4px 6px -2px var(--card-hover-shadow);
     }
 
-    .card-img {
+    .project-card .card-img {
       width: 100%;
-      height: 300px;
+      height: 200px;
       object-fit: cover;
       background-color: var(--img-bg);
       transition: background-color 0.3s ease;
     }
 
-    .card-body {
-      padding: 1.25rem;
+    .project-card .card-body {
+      padding: 1rem;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
+      flex-direction: column;
     }
 
-    .card-info {
-      flex: 1;
-    }
-
-    .company-logo-icon {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-      flex-shrink: 0;
-      border-radius: 4px;
-    }
-
-    .card-title {
-      font-size: 1.2rem;
+    .project-card .card-title {
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary-color);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       transition: color 0.3s ease;
     }
 
-    .card-text {
-      font-size: 0.95rem;
+    .project-card .card-text {
+      font-size: 0.85rem;
+      line-height: 1.45;
       color: var(--text-secondary);
       transition: color 0.3s ease;
     }
 
+    /* --- WORK EXPERIENCE SIDEBAR CARDS --- */
+    .exp-card {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .exp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 12px -2px var(--card-hover-shadow);
+      border-color: var(--primary-color);
+    }
+
+    .exp-logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      flex-shrink: 0;
+      border-radius: 6px;
+      background-color: #ffffff;
+      padding: 3px;
+      border: 1px solid var(--border-color);
+    }
+
+    .exp-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .exp-role {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.15rem;
+      transition: color 0.3s ease;
+    }
+
+    .exp-card:hover .exp-role {
+      color: var(--primary-color);
+    }
+
+    .exp-company {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.3s ease;
+    }
+
     /* --- RESPONSIVE LAYOUT FOR MOBILE --- */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
       .hero-container {
         flex-direction: column;
         text-align: center;
@@ -344,6 +404,10 @@
       }
 
       .content-container {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
         grid-template-columns: 1fr;
       }
 
@@ -370,8 +434,8 @@
     <div class="nav-links">
       <a href="#home" class="nav-link">Home</a>
       <a href="about.html" class="nav-link">About Me</a>
-      <a href="#work-experience" class="nav-link">Work Experience</a>
       <a href="#projects" class="nav-link">Projects</a>
+      <a href="#work-experience" class="nav-link">Work Experience</a>
       <a href="resume.pdf" target="_blank" class="nav-link resume-btn">Resume (PDF)</a>
     </div>
   </nav>
@@ -401,133 +465,108 @@
     </div>
   </header>
 
-  <!-- MAIN TWO-COLUMN LAYOUT -->
+  <!-- MAIN CONTENT SECTION: PROJECTS CENTER STAGE & WORK EXPERIENCE SIDEBAR -->
   <main class="content-container">
 
-    <!-- LEFT COLUMN: WORK EXPERIENCE -->
-    <section class="column" id="work-experience">
-      <h2>Work Experience</h2>
-
-      <!-- Vermeer -->
-      <a href="work/vermeer.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Vermeer" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
-            <h3 class="card-title">Robotics Engineering Intern @ Vermeer</h3>
-            <p class="card-text">
-              Developed automated testing fixtures, optimized manufacturing processes, and conducted failure mode
-              analysis on mechanical assemblies.
-            </p>
-          </div>
-          <img src="images/vermeer_logo.jpg" alt="Vermeer Logo" class="company-logo-icon" />
-        </div>
-      </a>
-
-      <!-- 370 CA -->
-      <a href="projects/work-role-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Course Assistant for ME 370: Mechanical Design I"
-          class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
-            <h3 class="card-title">Course Assistant for ME 370: Mechanical Design I</h3>
-            <p class="card-text">
-              Designed custom CAD models, integrated sensor arrays, and wrote Python scripts for real-time kinematic
-              data acquisition.
-            </p>
-          </div>
-          <img src="images/uiuc_logo.jpg" alt="UIUC Logo" class="company-logo-icon" />
-        </div>
-      </a>
-
-      <!-- Hendrickson -->
-      <a href="projects/work-role-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Engineering Intern @ Hendrickson" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
-            <h3 class="card-title">Engineering Intern @ Hendrickson</h3>
-            <p class="card-text">
-              Designed custom CAD models, integrated sensor arrays, and wrote Python scripts for real-time kinematic
-              data acquisition.
-            </p>
-          </div>
-          <img src="images/hendrickson_logo.jpg" alt="Hendrickson Logo" class="company-logo-icon" />
-        </div>
-      </a>
-    </section>
-
-    <!-- RIGHT COLUMN: PROJECTS -->
+    <!-- CENTER STAGE: FEATURED PROJECTS -->
     <section class="column" id="projects">
       <h2>Featured Projects</h2>
+      <div class="projects-grid">
 
-      <!-- 6-axis -->
-      <a href="projects/6-Axis/6-axis-robotic-arm.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Monocycle Robot" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
+        <!-- 6-axis -->
+        <a href="projects/6-Axis/6-axis-robotic-arm.html" class="card project-card">
+          <img src="projects/ME371/IMG_8902.jpeg" alt="Monocycle Robot" class="card-img" />
+          <div class="card-body">
             <h3 class="card-title">Low-Cost Custom 6-Axis Robotic Arm</h3>
             <p class="card-text">
               Fabricated and programmed a dynamic single-wheel balance robot utilizing custom dual-extrusion 3D printed
               components and MATLAB controls.
             </p>
           </div>
-        </div>
-      </a>
+        </a>
 
-      <!-- SE 423 -->
-      <a href="projects/project-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
+        <!-- SE 423 -->
+        <a href="projects/project-2.html" class="card project-card">
+          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <div class="card-body">
             <h3 class="card-title">SLAM Golf Putter</h3>
             <p class="card-text">
               Designed a two-layer PCB in KiCad for brushless motor control with onboard current sensing and thermal
               protection logic.
             </p>
           </div>
-        </div>
-      </a>
+        </a>
 
-      <!-- ME 446 -->
-      <a href="projects/project-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
+        <!-- ME 446 -->
+        <a href="projects/project-2.html" class="card project-card">
+          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <div class="card-body">
             <h3 class="card-title">Multi-Scheme Control for Robotic Arm</h3>
             <p class="card-text">
               Designed a two-layer PCB in KiCad for brushless motor control with onboard current sensing and thermal
               protection logic.
             </p>
           </div>
-        </div>
-      </a>
+        </a>
 
-      <!-- ME 371 -->
-      <a href="projects/project-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
+        <!-- ME 371 -->
+        <a href="projects/project-2.html" class="card project-card">
+          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <div class="card-body">
             <h3 class="card-title">Low-Budget Gear-Shifting Robotic Car</h3>
             <p class="card-text">
               Designed a two-layer PCB in KiCad for brushless motor control with onboard current sensing and thermal
               protection logic.
             </p>
           </div>
-        </div>
-      </a>
+        </a>
 
-      <!-- ME 370 -->
-      <a href="projects/project-2.html" class="card">
-        <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
-        <div class="card-body">
-          <div class="card-info">
+        <!-- ME 370 -->
+        <a href="projects/project-2.html" class="card project-card">
+          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <div class="card-body">
             <h3 class="card-title">6-Legged Robotic Walker</h3>
             <p class="card-text">
               Designed a two-layer PCB in KiCad for brushless motor control with onboard current sensing and thermal
               protection logic.
             </p>
           </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- SIDE COLUMN: WORK EXPERIENCE -->
+    <section class="column" id="work-experience">
+      <h2>Work Experience</h2>
+
+      <!-- Vermeer -->
+      <a href="work/vermeer.html" class="exp-card">
+        <img src="images/vermeer_logo.jpg" alt="Vermeer Logo" class="exp-logo" />
+        <div class="exp-info">
+          <h3 class="exp-role">Robotics Engineering Intern</h3>
+          <p class="exp-company">Vermeer</p>
         </div>
       </a>
+
+      <!-- 370 CA -->
+      <a href="projects/work-role-2.html" class="exp-card">
+        <img src="images/uiuc_logo.jpg" alt="UIUC Logo" class="exp-logo" />
+        <div class="exp-info">
+          <h3 class="exp-role">Course Assistant (ME 370)</h3>
+          <p class="exp-company">UIUC</p>
+        </div>
+      </a>
+
+      <!-- Hendrickson -->
+      <a href="projects/work-role-2.html" class="exp-card">
+        <img src="images/hendrickson_logo.jpg" alt="Hendrickson Logo" class="exp-logo" />
+        <div class="exp-info">
+          <h3 class="exp-role">Engineering Intern</h3>
+          <p class="exp-company">Hendrickson</p>
+        </div>
+      </a>
+
     </section>
 
   </main>
