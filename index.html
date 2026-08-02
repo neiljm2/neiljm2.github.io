@@ -193,6 +193,19 @@
       color: var(--text-primary);
       margin-bottom: 0.5rem;
       transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .illinois-badge {
+      width: 66px;
+      height: 66px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 3px solid var(--border-color);
+      transition: border-color 0.3s ease;
+      flex-shrink: 0;
     }
 
     .hero-text p {
@@ -302,6 +315,8 @@
       object-fit: cover;
       background-color: var(--img-bg);
       transition: background-color 0.3s ease;
+      display: block;
+      pointer-events: none;
     }
 
     .project-card .card-body {
@@ -353,7 +368,7 @@
       flex-shrink: 0;
       border-radius: 6px;
       background-color: #ffffff;
-      padding: 3px;
+      padding: 1px;
       border: 1px solid var(--border-color);
     }
 
@@ -397,6 +412,10 @@
       .hero-container {
         flex-direction: column;
         text-align: center;
+      }
+
+      .hero-text h1 {
+        justify-content: center;
       }
 
       .hero-buttons {
@@ -445,7 +464,10 @@
     <div class="hero-container">
       <img src="images/me.jpg" alt="Profile Picture" class="profile-img" />
       <div class="hero-text">
-        <h1>Neil Maushard</h1>
+        <h1>
+          Neil Maushard
+          <img src="images/uiuc_logo.jpg" alt="University of Illinois Logo" class="illinois-badge" />
+        </h1>
         <p>
           Mechanical engineering student passionate about bringing mechanical systems to life :)
         </p>
@@ -475,7 +497,8 @@
 
         <!-- 6-axis -->
         <a href="projects/6-Axis/6-axis-robotic-arm.html" class="card project-card">
-          <img src="projects/ME371/IMG_8902.jpeg" alt="Monocycle Robot" class="card-img" />
+          <video class="card-img" autoplay loop muted playsinline
+            src="projects/6-Axis/short_move_w_grabber.mp4"></video>
           <div class="card-body">
             <h3 class="card-title">Low-Cost Custom 6-Axis Robotic Arm</h3>
             <p class="card-text">
@@ -487,7 +510,8 @@
 
         <!-- SE 423 -->
         <a href="projects/project-2.html" class="card project-card">
-          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <video class="card-img" autoplay loop muted playsinline data-start="65" data-end="73"
+            src="projects/SE423/demo_labview.mp4#t=65,73"></video>
           <div class="card-body">
             <h3 class="card-title">SLAM Golf Putter</h3>
             <p class="card-text">
@@ -499,7 +523,8 @@
 
         <!-- ME 446 -->
         <a href="projects/project-2.html" class="card project-card">
-          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <video class="card-img" autoplay loop muted playsinline data-speed="2"
+            src="projects/ME446/demo_success.mp4"></video>
           <div class="card-body">
             <h3 class="card-title">Multi-Scheme Control for Robotic Arm</h3>
             <p class="card-text">
@@ -523,7 +548,8 @@
 
         <!-- ME 370 -->
         <a href="projects/project-2.html" class="card project-card">
-          <img src="projects/ME371/IMG_8902.jpeg" alt="Custom PCB Design" class="card-img" />
+          <video class="card-img" autoplay loop muted playsinline data-speed="4"
+            src="projects/ME370/slomo_walking.MOV"></video>
           <div class="card-body">
             <h3 class="card-title">6-Legged Robotic Walker</h3>
             <p class="card-text">
@@ -549,17 +575,26 @@
         </div>
       </a>
 
+      <!-- KIMLAB -->
+      <a href="work/kimlab.html" class="exp-card">
+        <img src="images/kimlab_logo.jpg" alt="KIMLAB Logo" class="exp-logo" />
+        <div class="exp-info">
+          <h3 class="exp-role">Research Assistant</h3>
+          <p class="exp-company">UIUC - KIMLAB</p>
+        </div>
+      </a>
+
       <!-- 370 CA -->
-      <a href="projects/work-role-2.html" class="exp-card">
+      <a href="work/370_ca.html" class="exp-card">
         <img src="images/uiuc_logo.jpg" alt="UIUC Logo" class="exp-logo" />
         <div class="exp-info">
           <h3 class="exp-role">Course Assistant (ME 370)</h3>
-          <p class="exp-company">UIUC</p>
+          <p class="exp-company">UIUC - MechSE Dept.</p>
         </div>
       </a>
 
       <!-- Hendrickson -->
-      <a href="projects/work-role-2.html" class="exp-card">
+      <a href="work/hendrickson.html" class="exp-card">
         <img src="images/hendrickson_logo.jpg" alt="Hendrickson Logo" class="exp-logo" />
         <div class="exp-info">
           <h3 class="exp-role">Engineering Intern</h3>
@@ -616,6 +651,31 @@
       window.history.replaceState({}, '', url.pathname + url.search + url.hash);
 
       syncLinks(theme);
+    });
+
+    document.querySelectorAll('video').forEach(video => {
+      const applySpeed = () => {
+        if (video.dataset.speed) {
+          video.playbackRate = parseFloat(video.dataset.speed);
+        }
+      };
+      applySpeed();
+      video.addEventListener('play', applySpeed);
+
+      const start = video.dataset.start ? parseFloat(video.dataset.start) : null;
+      const end = video.dataset.end ? parseFloat(video.dataset.end) : null;
+
+      if (start !== null) {
+        video.currentTime = start;
+      }
+      if (start !== null && end !== null) {
+        video.addEventListener('timeupdate', () => {
+          if (video.currentTime >= end || video.currentTime < start) {
+            video.currentTime = start;
+            video.play();
+          }
+        });
+      }
     });
   </script>
 
