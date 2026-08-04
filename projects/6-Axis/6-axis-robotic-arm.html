@@ -165,6 +165,21 @@
       transition: color 0.3s ease;
     }
 
+    .project-header .doc-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: inline-block;
+    }
+
+    .project-header .doc-link:hover {
+      color: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
     /* --- THREE COLUMN LAYOUT --- */
     .project-layout {
       display: grid;
@@ -233,8 +248,17 @@
       color: var(--primary-color);
     }
 
-    .code-link-btn svg {
+    .code-link-btn svg,
+    .code-logo-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
       flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .code-link-btn:hover .code-logo-icon {
+      transform: scale(1.1);
     }
 
     /* Right Sidebar: Collaborators */
@@ -404,7 +428,11 @@
   <!-- PROJECT HEADER -->
   <header class="project-header">
     <h1>6-Axis Robotic Arm from Scratch</h1>
-    <p class="subtitle">Design, fabrication, and custom multi-scheme controls implementation</p>
+    <p class="subtitle">
+      <a href="6-Axis%20Robotic%20Arm%20Official%20Documentation.pdf" target="_blank" class="doc-link">
+        View In-Depth Technical Documentation &rarr;
+      </a>
+    </p>
   </header>
 
   <!-- MAIN PROJECT LAYOUT -->
@@ -413,35 +441,29 @@
     <!-- LEFT SIDEBAR: Skills & Code -->
     <aside class="sidebar-left">
       <div class="sidebar-section">
-        <h3>Skills Used</h3>
-        <div class="skills-container">
-          <span class="skill-badge">Embedded C/C++</span>
-          <span class="skill-badge">Kinematics</span>
-          <span class="skill-badge">PID Loops</span>
-          <span class="skill-badge">SolidWorks CAD</span>
-          <span class="skill-badge">3D Printing</span>
-          <span class="skill-badge">Microcontrollers</span>
-          <span class="skill-badge">MATLAB Sim</span>
+        <h3>Project Code</h3>
+        <div class="code-links-container">
+          <a href="6-axis-robotic-arm-code.html?file=arduino" target="_blank" class="code-link-btn">
+            <img src="../../images/arduino_logo.png" alt="Arduino Logo" class="code-logo-icon" />
+            Controls (CombinedControls.ino)
+          </a>
+          <a href="6-axis-robotic-arm-code.html?file=python" target="_blank" class="code-link-btn">
+            <img src="../../images/python-logo.png" alt="Python Logo" class="code-logo-icon" />
+            Backend (backend.py)
+          </a>
         </div>
       </div>
 
       <div class="sidebar-section" style="margin-top: 2rem;">
-        <h3>Project Code</h3>
-        <div class="code-links-container">
-          <a href="6-axis-robotic-arm-code.html?file=arduino" target="_blank" class="code-link-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path
-                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z" />
-            </svg>
-            Arduino Controls (.ino)
-          </a>
-          <a href="6-axis-robotic-arm-code.html?file=python" target="_blank" class="code-link-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-            </svg>
-            Python Backend (backend.py)
-          </a>
+        <h3>Skills Used</h3>
+        <div class="skills-container">
+          <span class="skill-badge">Motor Control</span>
+          <span class="skill-badge">Sensors</span>
+          <span class="skill-badge">Kinematics</span>
+          <span class="skill-badge">Mechanical Design</span>
+          <span class="skill-badge">Microcontrollers</span>
+          <span class="skill-badge">Python</span>
+          <span class="skill-badge">Electronics</span>
         </div>
       </div>
     </aside>
@@ -449,59 +471,89 @@
     <!-- CENTER: Main Content (Scrollable Images and Text) -->
     <section class="project-content">
 
+      <!-- Project Overview -->
+      <article class="scrollable-details">
+        <h2>Project Overview</h2>
+        <p>
+          This project involved building a custom 6-axis robotic arm from scratch on a $300 budget, which was
+          accomplished
+          with fully custom mechanical design, electronics, controls, and backend programming. Of these, I led the
+          development
+          of the controls and the electronic hardware. The primary goal was to navigate the end-effector smoothly
+          through the
+          arm's task space with bonus goals of pick-and-place and light painting.
+        </p>
+      </article>
       <!-- Interactive 3D Model Viewer -->
       <div class="media-container" style="height: 450px;">
-        <model-viewer src="full_robot.glb" alt="3D CAD model of the 6-Axis Robotic Arm" auto-rotate
-          camera-controls shadow-intensity="1" environment-image="neutral"
+        <model-viewer src="full_robot.glb" alt="3D CAD model of the 6-Axis Robotic Arm" auto-rotate camera-controls
+          shadow-intensity="1" environment-image="neutral"
           style="width: 100%; height: 100%; background-color: var(--img-bg); border-radius: 6px;">
         </model-viewer>
         <p class="media-caption">Interactive 3D CAD Assembly (Click and drag to rotate, scroll to zoom).</p>
       </div>
 
-      <!-- Project Overview -->
       <article class="scrollable-details">
-        <h2>Project Overview</h2>
+        <h2>Mechanical Design & Assembly</h2>
         <p>
-          This project involved building a custom 6-axis robotic arm from the ground up, starting from structural design in CAD to routing motor controller boards and writing real-time control algorithms. The primary goal was to navigate the end-effector smoothly through a constrained space.
+          The arm was modeled in Fusion 360, factoring in strength, rotational limits, and weight
+          distribution. The linkages consisted of pieces of 80/20 aluminum extrusion for strength
+          and 3D printed PLA for precise electronics housing and attach points. The design of the
+          arm was inspired by the UR3 robotic arm, which was chosen for its simple joint configuration,
+          especially at the wrist.
         </p>
       </article>
 
       <!-- Media Card 1: Initial Mechanical Assembly -->
       <div class="media-container">
         <img src="hardware_before_electronics.jpg" alt="Hardware assembly before electronics" />
-        <p class="media-caption">Figure 1: Initial mechanical assembly of the robotic arm structural linkages before routing electrical systems.</p>
+
       </div>
 
       <article class="scrollable-details">
-        <h2>Mechanical Design & Assembly</h2>
+        <h2>Electrical Design</h2>
         <p>
-          The arm was modeled in SolidWorks, factoring in structural strength, rotational limits, and weight distribution. The linkages were custom 3D-printed using robust infill patterns and reinforced with custom aluminum support brackets to withstand dynamic loads.
+          Before implementing the electrical system, I created a comprehensive schematic to plan power delivery,
+          motor control, and sensor feedback. The goal of the schematic was to act as a blueprint for the entire
+          electrical system, ensuring that all components were properly connected and also to learn about the motors,
+          control modules, encoders, and microcontroller while budget constraints prevented us from getting our hands
+          on the hardware yet.
         </p>
       </article>
+
+      <!-- Media Card 1: Full Schematic -->
+      <div class="media-container">
+        <img src="full_schematic.jpg" alt="Full electrical schematic" />
+
+      </div>
 
       <!-- Media Card 2: Wiring in Progress (WIP) -->
       <div class="media-container">
         <img src="messy_WIP.jpg" alt="Wiring work in progress" />
-        <p class="media-caption">Figure 2: Wiring harness assembly and breadboarding of stepper drivers during prototype testing.</p>
       </div>
 
       <article class="scrollable-details">
         <h2>Electrical Integration</h2>
         <p>
-          Wiring up a 6-axis manipulator requires careful cable routing to prevent binding and wire strain during motion. Custom power buses and driver boards were wired to step down the supply voltage and isolate logic control lines from motor drivers.
+          Wiring up a 6-axis manipulator requires careful cable routing to prevent binding and wire strain during
+          motion. Custom power buses and driver boards were wired to step down the supply voltage and isolate logic
+          control lines from motor drivers.
         </p>
       </article>
 
       <!-- Media Card 3: Custom Motor Leads -->
       <div class="media-container">
         <img src="CuteLeadsPhoto.jpg" alt="Custom motor leads photo" />
-        <p class="media-caption">Figure 3: Cleaned custom motor leads and cable bundles routed through joint sleeves.</p>
+        <p class="media-caption">Figure 3: Cleaned custom motor leads and cable bundles routed through joint sleeves.
+        </p>
       </div>
 
       <article class="scrollable-details">
         <h2>Cable Management Optimization</h2>
         <p>
-          To ensure reliability, the temporary prototyping wires were replaced with structured cable bundles. Using braided sleeves and custom-soldered leads routed through the hollow axes of the joints, the cable management was optimized to minimize rotational resistance.
+          To ensure reliability, the temporary prototyping wires were replaced with structured cable bundles. Using
+          braided sleeves and custom-soldered leads routed through the hollow axes of the joints, the cable management
+          was optimized to minimize rotational resistance.
         </p>
       </article>
 
@@ -511,13 +563,16 @@
           <source src="arm_spinning_jank.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 4: First dynamic test run demonstrating stepper rotation speeds and joint limits.</p>
+        <p class="media-caption">Figure 4: First dynamic test run demonstrating stepper rotation speeds and joint
+          limits.</p>
       </div>
 
       <article class="scrollable-details">
         <h2>First Motion Calibration</h2>
         <p>
-          With hardware and electrical systems finalized, the initial controller code was loaded to check basic actuator functionality. The first motion tests revealed rotational offsets and inertial jitter, which were mitigated by introducing acceleration profiling.
+          With hardware and electrical systems finalized, the initial controller code was loaded to check basic actuator
+          functionality. The first motion tests revealed rotational offsets and inertial jitter, which were mitigated by
+          introducing acceleration profiling.
         </p>
       </article>
 
@@ -527,13 +582,16 @@
           <source src="outer_joints_moving.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 5: Coordinated joint movement testing demonstrating multi-axis velocity synchronization.</p>
+        <p class="media-caption">Figure 5: Coordinated joint movement testing demonstrating multi-axis velocity
+          synchronization.</p>
       </div>
 
       <article class="scrollable-details">
         <h2>Control Loop Tuning</h2>
         <p>
-          To coordinate complex, multi-joint trajectories, a joint-space control loop was implemented. By reading real-time encoder values, the microcontroller synchronized the stepper frequencies dynamically, enabling smoother arcs and path tracking.
+          To coordinate complex, multi-joint trajectories, a joint-space control loop was implemented. By reading
+          real-time encoder values, the microcontroller synchronized the stepper frequencies dynamically, enabling
+          smoother arcs and path tracking.
         </p>
       </article>
 
@@ -544,13 +602,16 @@
           <source src="short_move_w_grabber.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 6: Custom-designed end-effector gripper executing a simple pick-and-place task.</p>
+        <p class="media-caption">Figure 6: Custom-designed end-effector gripper executing a simple pick-and-place task.
+        </p>
       </div>
 
       <article class="scrollable-details">
         <h2>End-Effector Integration</h2>
         <p>
-          The final link of the arm is a custom-actuated gripper designed to pick and place objects. Servos drive the grabber plates, requiring fine-grained task-space controls to coordinate cartesian end-effector positioning with the gripper actuation states.
+          The final link of the arm is a custom-actuated gripper designed to pick and place objects. Servos drive the
+          grabber plates, requiring fine-grained task-space controls to coordinate cartesian end-effector positioning
+          with the gripper actuation states.
         </p>
       </article>
 
@@ -560,13 +621,16 @@
           <source src="GoodVideo1.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 7: The robotic manipulator smoothly completing its trajectory path without drift or collision.</p>
+        <p class="media-caption">Figure 7: The robotic manipulator smoothly completing its trajectory path without drift
+          or collision.</p>
       </div>
 
       <article class="scrollable-details">
         <h2>Trajectory Optimization & Success</h2>
         <p>
-          By combining joint-space moves, cartesian task-space pathing, and customized feedback regulation, the arm achieved stable path tracking accuracy. The trajectory optimization solved the inverse kinematics solver loop in real-time, completing the physical course.
+          By combining joint-space moves, cartesian task-space pathing, and customized feedback regulation, the arm
+          achieved stable path tracking accuracy. The trajectory optimization solved the inverse kinematics solver loop
+          in real-time, completing the physical course.
         </p>
       </article>
 
@@ -577,13 +641,16 @@
           <source src="GoodMovingVideoAndCOlleeenHappy.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 8: Coordinated speed test illustrating complete control stability at accelerated velocities.</p>
+        <p class="media-caption">Figure 8: Coordinated speed test illustrating complete control stability at accelerated
+          velocities.</p>
       </div>
 
       <article class="scrollable-details">
         <h2>Performance Evaluation</h2>
         <p>
-          Finally, the manipulator was tested under high speed and loaded conditions to locate physical stress limits. The system maintained dynamic tracking stability and structural integrity, proving the feasibility of custom low-cost robot manipulator designs.
+          Finally, the manipulator was tested under high speed and loaded conditions to locate physical stress limits.
+          The system maintained dynamic tracking stability and structural integrity, proving the feasibility of custom
+          low-cost robot manipulator designs.
         </p>
       </article>
 
