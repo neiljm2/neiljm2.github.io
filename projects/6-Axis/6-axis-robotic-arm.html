@@ -359,6 +359,20 @@
       transition: color 0.3s ease;
     }
 
+    /* --- 2x2 VIDEO GRID --- */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+
+    .video-grid .media-container {
+      width: 100%;
+      margin: 0;
+    }
+
     .scrollable-details h2 {
       font-size: 1.5rem;
       color: var(--text-primary);
@@ -403,6 +417,11 @@
       }
 
       .media-container {
+        width: 100%;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr;
         width: 100%;
       }
     }
@@ -475,9 +494,9 @@
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <p>
-          This project involved building a custom 6-axis robotic arm from scratch on a $300 budget, which was
-          accomplished
-          with fully custom mechanical design, electronics, controls, and backend programming. Of these, I led the
+          This project involved building a custom 6-axis robotic arm from scratch on a $300 budget for UIUC's
+          Engineering Open House (EOH) with fully in-house mechanical design, circuit design, controls, and backend
+          programming. Of these, I led the
           development
           of the controls and the electronic hardware. The primary goal was to navigate the end-effector smoothly
           through the
@@ -527,132 +546,135 @@
 
       </div>
 
+      <article class="scrollable-details">
+        <h2>Electronic Components</h2>
+        <p>
+          For actuation, I chose to use four NEMA stepper motors for the base, shoulder, elbow, and one wrist joint
+          along with two lighter DC motors for the other two wrist joints. The steppers were chosen for their very high
+          torque-to-price ratio while DC motors had to be used at the outer joints due to weight constraints. The base
+          and shoulder motors were equipped with a 20:1 and 50:1 gearbox respectively to further increase their torque
+          output. Ideally we would have opted for higher quality DC motors with high precision and torque, however with
+          a budget of $300 we couldn't afford to put any more than $100 towards motors and gearboxes, so we had to make
+          do with the best we could get our hands on.
+          <br>
+          <br>
+          For stepper control, we opted for the popular A4988 motor drivers, which were chosen for their low
+          price, small form factor, and ease of use with the Arduino platform. For the two DC motors, we chose an
+          L298N H-bridge motor driver for its high current throughput and ability to control two motors at once.
+          <br>
+          <br>
+          For
+          position feedback, we used a set of magnetic hall effect sensors at each joint to read the angle of the
+          motor shaft, which we mounted to the back of each motor with some 3D printed brackets. We chose these sensors
+          for their extremely low cost with relatively high precision. This allowed us to
+          achieve a resolution of ~1 degree on the non-gearboxed joints and <0.5 degree precision on our gearboxed
+            joints. <br>
+            <br>
+            The brain of the arm was an Arduino Mega, which was desired for its large number of PWM pins and the
+            simplicity
+            of the Arduino platform.
+      </article>
+
       <!-- Media Card 2: Wiring in Progress (WIP) -->
       <div class="media-container">
         <img src="messy_WIP.jpg" alt="Wiring work in progress" />
       </div>
 
       <article class="scrollable-details">
-        <h2>Electrical Integration</h2>
+        <h2>Control</h2>
         <p>
-          Wiring up a 6-axis manipulator requires careful cable routing to prevent binding and wire strain during
-          motion. Custom power buses and driver boards were wired to step down the supply voltage and isolate logic
-          control lines from motor drivers.
+          The system uses a custom Arduino-based control scheme to control the 6-axis robotic arm, seamlessly
+          integrating four stepper motors and two DC motors. To achieve smooth, non-blocking motion, the stepper axes
+          are
+          driven by hardware timers configured in CTC (Clear Timer on Compare Match) mode, utilizing Interrupt Service
+          Routines (ISRs) for precise, jitter-free step generation. The input to the control scheme is a comma
+          delineated
+          vector of target angles sent over serial, with one angle for each motor. The firmware then calculates the
+          required displacement for each
+          joint and scales their step frequencies proportionally, ensuring all four axes start and finish their paths
+          simultaneously. To avoid blocking commands such as delay, each timestep the script checks whether or not each
+          motor should step or not based on its scaled frequency, setting the step pins true or false accordingly.
+          Furthermore, these steppers operate in a
+          closed-loop configuration, utilizing hall effect magnetic encoders and gear-ratio mathematics to dynamically
+          correct positional errors and avoid drift.
+          <br>
+          <br>
+          Complementing the stepper joints, the two DC motor axes are driven by H-bridges and regulated by a custom
+          Proportional (P) control loop. This loop continuously calculates real-time positional error based on
+          encoder feedback, applying dynamic PWM adjustments and directional switching to smoothly drive the joints to
+          their target angles. To handle multi-turn operations, the DC control scheme features custom zero-crossing
+          logic that accurately tracks continuous rotations.
         </p>
+
       </article>
 
-      <!-- Media Card 3: Custom Motor Leads -->
-      <div class="media-container">
-        <img src="CuteLeadsPhoto.jpg" alt="Custom motor leads photo" />
-        <p class="media-caption">Figure 3: Cleaned custom motor leads and cable bundles routed through joint sleeves.
-        </p>
-      </div>
-
-      <article class="scrollable-details">
-        <h2>Cable Management Optimization</h2>
-        <p>
-          To ensure reliability, the temporary prototyping wires were replaced with structured cable bundles. Using
-          braided sleeves and custom-soldered leads routed through the hollow axes of the joints, the cable management
-          was optimized to minimize rotational resistance.
-        </p>
-      </article>
-
-      <!-- Media Card 4: First Motion Test -->
-      <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="arm_spinning_jank.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Figure 4: First dynamic test run demonstrating stepper rotation speeds and joint
-          limits.</p>
-      </div>
-
-      <article class="scrollable-details">
-        <h2>First Motion Calibration</h2>
-        <p>
-          With hardware and electrical systems finalized, the initial controller code was loaded to check basic actuator
-          functionality. The first motion tests revealed rotational offsets and inertial jitter, which were mitigated by
-          introducing acceleration profiling.
-        </p>
-      </article>
-
-      <!-- Media Card 5: Coordinated Joint Movements -->
-      <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="outer_joints_moving.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Figure 5: Coordinated joint movement testing demonstrating multi-axis velocity
-          synchronization.</p>
-      </div>
-
-      <article class="scrollable-details">
-        <h2>Control Loop Tuning</h2>
-        <p>
-          To coordinate complex, multi-joint trajectories, a joint-space control loop was implemented. By reading
-          real-time encoder values, the microcontroller synchronized the stepper frequencies dynamically, enabling
-          smoother arcs and path tracking.
-        </p>
-      </article>
-
-      <!-- Media Card 6: Gripper Testing -->
-      <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="short_move_w_grabber.MOV" type="video/quicktime">
-          <source src="short_move_w_grabber.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Figure 6: Custom-designed end-effector gripper executing a simple pick-and-place task.
-        </p>
-      </div>
-
-      <article class="scrollable-details">
-        <h2>End-Effector Integration</h2>
-        <p>
-          The final link of the arm is a custom-actuated gripper designed to pick and place objects. Servos drive the
-          grabber plates, requiring fine-grained task-space controls to coordinate cartesian end-effector positioning
-          with the gripper actuation states.
-        </p>
-      </article>
-
-      <!-- Media Card 7: Successful Path Completion -->
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
           <source src="GoodVideo1.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 7: The robotic manipulator smoothly completing its trajectory path without drift
-          or collision.</p>
       </div>
 
       <article class="scrollable-details">
-        <h2>Trajectory Optimization & Success</h2>
+        <h2>Backend Software</h2>
         <p>
-          By combining joint-space moves, cartesian task-space pathing, and customized feedback regulation, the arm
-          achieved stable path tracking accuracy. The trajectory optimization solved the inverse kinematics solver loop
-          in real-time, completing the physical course.
+          To calculate the joint angles necessary for smooth cartesian path tracking, I developed a Python-based backend
+          that handles the arm's inverse kinematics (IK). The software implements a decoupled kinematic model: it
+          analytically computes the base rotation to align with the target plane, and then applies a non-linear
+          least-squares optimization solver (`scipy.optimize.least_squares` from SciPy) to solve for the planar joint
+          angles within physical limits. Once the trajectory is calculated, the backend packages the coordinate sequence
+          into a custom serial command packet and streams it to the Arduino over USB, enabling complex multi-point path
+          execution.
         </p>
       </article>
 
-      <!-- Media Card 8: High Speed Success Demo -->
+      <!-- 2x2 Video Grid -->
+      <div class="video-grid">
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="arm_spinning_jank.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="outer_joints_moving.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="short_move_w_grabber.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="GoodVideo1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Outcome</h2>
+        <p>
+          Tragically, the night before EOH at around 4am, the executive decision had to be made to remove the fourth
+          joint due to the arm struggling to support its own weight, a problem that can be traced back to our motors
+          being too weak along with our custom linkages being too heavy. During EOH, the arm was successfully able to
+          navigate its task space still, but as a 5-axis robot arm instead of a 6-axis robot arm. Due to this last
+          minute major change, we also had to scrap the pick and place and light painting tasks we had designed. Despite
+          this shortcoming right at the very end, this project was still a major success in my book. Doing everything
+          from scratch forced me step very far out of my comfort zone in a way that taught me many hard skills but also
+          invaluable soft skills such as leadership and the ability to perform under pressure. Most importantly, the
+          great times I had with friends and teammates was something I will never forget and made all of the sleepless
+          nights worth it.
+        </p>
+      </article>
+
       <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="GoodMovingVideoAndCOlleeenHappy.MOV" type="video/quicktime">
-          <source src="GoodMovingVideoAndCOlleeenHappy.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Figure 8: Coordinated speed test illustrating complete control stability at accelerated
-          velocities.</p>
+        <img src="CuteLeadsPhoto.jpg" alt="Final project lead photos" />
       </div>
-
-      <article class="scrollable-details">
-        <h2>Performance Evaluation</h2>
-        <p>
-          Finally, the manipulator was tested under high speed and loaded conditions to locate physical stress limits.
-          The system maintained dynamic tracking stability and structural integrity, proving the feasibility of custom
-          low-cost robot manipulator designs.
-        </p>
-      </article>
 
     </section>
 
