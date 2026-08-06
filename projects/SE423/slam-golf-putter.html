@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SLAM Golf Putter - Project Details</title>
+  <style>
+    :root {
+      /* Default: Night Mode */
+      --bg-color: #0f172a;
+      --surface-bg: #1e293b;
+      --navbar-bg: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --primary-color: #60a5fa;
+      --primary-hover: #3b82f6;
+      --card-hover-shadow: rgba(0, 0, 0, 0.4);
+      --img-bg: #1e293b;
+    }
+
+    body.light-mode {
+      /* Overrides for Light Mode */
+      --bg-color: #f7fafc;
+      --surface-bg: #ffffff;
+      --navbar-bg: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --border-color: #e2e8f0;
+      --primary-color: #2b6cb0;
+      --primary-hover: #1d4ed8;
+      --card-hover-shadow: rgba(0, 0, 0, 0.08);
+      --img-bg: #edf2f7;
+    }
+
+    /* --- BASE STYLES --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* --- TOP NAVIGATION BAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--navbar-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .back-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* --- THEME TOGGLE SWITCH --- */
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 26px;
+      position: relative;
+      width: 50px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: #334155;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .slider:before {
+      background-color: #ffffff;
+      bottom: 2px;
+      content: "";
+      height: 20px;
+      left: 2px;
+      position: absolute;
+      transition: 0.4s;
+      width: 20px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .slider .sun-icon,
+    .slider .moon-icon {
+      font-size: 12px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    input:checked+.slider {
+      background-color: #cbd5e1;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    /* --- PROJECT HEADER --- */
+    .project-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 3rem auto 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .project-header h1 {
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    /* --- THREE COLUMN LAYOUT --- */
+    .project-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr 200px;
+      gap: 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto 4rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Sidebars styling */
+    .sidebar-left h3,
+    .sidebar-right h3 {
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Right Sidebar: Collaborators */
+    /* Right Sidebar: Collaborators */
+    .collaborators-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .collaborator-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .collaborator-card:hover {
+      background-color: var(--border-color);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .collab-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .linkedin-icon {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .collaborator-card:hover .linkedin-icon {
+      transform: scale(1.1);
+    }
+
+    /* Left Sidebar: Skills */
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .skill-badge {
+      background-color: var(--surface-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    /* Code Links */
+    .code-links-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .code-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      background-color: var(--surface-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+      width: 100%;
+    }
+
+    .code-link-btn:hover {
+      background-color: var(--border-color);
+      color: var(--primary-color);
+    }
+
+    .code-logo-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .code-link-btn:hover .code-logo-icon {
+      transform: scale(1.1);
+    }
+
+    /* Center: Main Scrollable Content */
+    .project-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .media-container {
+      background-color: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      transition: background-color 0.3s, border-color 0.3s;
+      width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .media-container img,
+    .media-container video {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .media-caption {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      transition: color 0.3s ease;
+    }
+
+    .scrollable-details h2 {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      transition: color 0.3s ease;
+    }
+
+    .scrollable-details p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      line-height: 1.65;
+      transition: color 0.3s ease;
+    }
+
+    .scrollable-details ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+    }
+
+    .scrollable-details li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* --- 2x2 VIDEO GRID --- */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+
+    .video-grid .media-container {
+      width: 100%;
+      margin: 0;
+    }
+
+    /* --- RESPONSIVE LAYOUT --- */
+    @media (max-width: 900px) {
+      .project-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .sidebar-left {
+        order: 2;
+      }
+
+      .project-content {
+        order: 1;
+      }
+
+      .sidebar-right {
+        order: 3;
+      }
+
+      .media-container {
+        width: 100%;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body id="home">
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav class="navbar">
+    <a href="../../index.html" class="back-link">&larr; Back to Portfolio</a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider">
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </div>
+      </label>
+    </div>
+  </nav>
+
+  <!-- PROJECT HEADER -->
+  <header class="project-header">
+    <h1>SLAM Golf Putter</h1>
+  </header>
+
+  <!-- MAIN PROJECT LAYOUT -->
+  <main class="project-layout">
+
+    <!-- LEFT SIDEBAR: Skills & Code -->
+    <aside class="sidebar-left">
+      <div class="sidebar-section">
+        <h3>Project Code</h3>
+        <div class="code-links-container">
+          <a href="FinalProjMain.c" target="_blank" class="code-link-btn">
+            <img src="../../images/python-logo.png" alt="C Logo" class="code-logo-icon"
+              style="filter: hue-rotate(90deg);" />
+            Main Loop (FinalProjMain.c)
+          </a>
+          <a href="PERSONALPROJ_NM.c" target="_blank" class="code-link-btn">
+            <img src="../../images/python-logo.png" alt="C Logo" class="code-logo-icon"
+              style="filter: hue-rotate(90deg);" />
+            Personal Logic (PERSONALPROJ_NM.c)
+          </a>
+          <a href="FinalProject_NM_CE_JY_RW.h" target="_blank" class="code-link-btn">
+            <img src="../../images/python-logo.png" alt="Header Logo" class="code-logo-icon"
+              style="filter: hue-rotate(180deg);" />
+            Constants (FinalProject_NM_CE_JY_RW.h)
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-section" style="margin-top: 2rem;">
+        <h3>Skills Used</h3>
+        <div class="skills-container">
+          <span class="skill-badge">Autonomous Navigation</span>
+          <span class="skill-badge">SLAM Mapping</span>
+          <span class="skill-badge">Hall Effect Encoders</span>
+          <span class="skill-badge">C Programming</span>
+          <span class="skill-badge">LabVIEW Controls</span>
+          <span class="skill-badge">Signal Processing</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: Main Content (Scrollable Images and Text) -->
+    <section class="project-content">
+
+      <!-- Project Overview -->
+      <article class="scrollable-details">
+        <h2>Project Overview</h2>
+        <ul>
+          <li><strong>Course &amp; Context:</strong> Developed for UIUC's SE 423 (Mechatronics) course as an autonomous robotics project.</li>
+          <li><strong>In-House Design:</strong> Designed the sensor fusion matrix, motor drive mounts, and LabVIEW control layout.</li>
+          <li><strong>My Role:</strong> Focused on control loop coding, sensor calibration, and LabVIEW dynamic mapping.</li>
+          <li><strong>Objectives:</strong> Navigating target spaces autonomously via SLAM, localization, and launching a golf ball into a cup.</li>
+        </ul>
+      </article>
+
+      <!-- Media Card 1: Team Pic -->
+      <div class="media-container">
+        <img src="Team Pic.jpg" alt="SLAM Golf Putter team assembly and system testing setup" />
+        <p class="media-caption">Figure 1: SLAM Golf Putter team assembly and system testing setup.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Mechanical &amp; Sensor Integration</h2>
+        <p>
+          The chassis was constructed using <strong>custom mounts</strong> to align the motor shafts and sensor arrays. We integrated
+          high-resolution <strong>wheel encoders</strong> for odometer readings alongside <strong>distance sensors</strong> to feed
+          localized spatial matrices into the mapping controller. This <strong>sensor fusion loop</strong> ensured drift
+          correction during active navigation.
+        </p>
+      </article>
+
+      <article class="scrollable-details">
+        <h2>Control Loop Design</h2>
+        <p>
+          The <strong>low-level controls</strong> were written in <strong>C</strong>, handling <strong>PID velocity loops</strong> for
+          the drive motors.
+          <strong>LabVIEW</strong> was utilized to build the <strong>high-level supervisory controls</strong> and <strong>path planning
+            interface</strong>,
+          allowing <strong>real-time trajectory visualization</strong> and parameter tuning during autonomous putting runs.
+        </p>
+      </article>
+
+      <!-- Video Grid -->
+      <div class="video-grid">
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="demo_success.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p class="media-caption">Autonomous Path Completion and Successful Putt</p>
+        </div>
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls>
+            <source src="demo_labview.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p class="media-caption">LabVIEW Real-Time Mapping Interface Demo</p>
+        </div>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Outcome</h2>
+        <p>
+          The autonomous putter successfully completed its spatial mapping routine and completed <strong>putting trials</strong> with
+          high repeatability. The control software reliably calculated the necessary <strong>launch velocity vector</strong>, correcting
+          for <strong>odometer slip</strong> and drift in real-time.
+        </p>
+      </article>
+
+    </section>
+
+    <!-- RIGHT SIDEBAR: Collaborators -->
+    <aside class="sidebar-right">
+      <h3>Collaborators</h3>
+      <div class="collaborators-list">
+        <!-- Collab 2: Christopher Egly -->
+        <a href="https://www.linkedin.com/in/christopher-egly/" target="_blank" class="collaborator-card"
+          aria-label="Christopher Egly's LinkedIn Profile">
+          <span class="collab-name">Christopher Egly</span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
+        </a>
+        <!-- Collab 4: Jiatian Yuan -->
+        <a href="https://www.linkedin.com/in/jiatian-yuan/" target="_blank" class="collaborator-card"
+          aria-label="Jiatian Yuan's LinkedIn Profile">
+          <span class="collab-name">Jiatian Yuan</span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
+        </a>
+        <!-- Collab 5: Reid G. Wollen -->
+        <a href="https://www.linkedin.com/in/reid-g-wollen/" target="_blank" class="collaborator-card"
+          aria-label="Reid Wollen's LinkedIn Profile">
+          <span class="collab-name">Reid Wollen</span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
+        </a>
+      </div>
+    </aside>
+
+  </main>
+
+  <script>
+    const toggleSwitch = document.querySelector('#checkbox');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlTheme = urlParams.get('theme');
+    const localTheme = localStorage.getItem('theme');
+
+    let activeTheme = 'dark';
+    if (urlTheme === 'light' || urlTheme === 'dark') {
+      activeTheme = urlTheme;
+    } else if (localTheme === 'light' || localTheme === 'dark') {
+      activeTheme = localTheme;
+    }
+
+    const isLight = (activeTheme === 'light');
+    document.body.classList.toggle('light-mode', isLight);
+    toggleSwitch.checked = isLight;
+
+    function syncLinks(theme) {
+      document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+          const parts = href.split('?');
+          const basePath = parts[0];
+          const searchParams = new URLSearchParams(parts[1] || '');
+          searchParams.set('theme', theme);
+          link.setAttribute('href', basePath + '?' + searchParams.toString());
+        }
+      });
+    }
+
+    syncLinks(activeTheme);
+
+    toggleSwitch.addEventListener('change', (e) => {
+      const nextLight = e.target.checked;
+      const theme = nextLight ? 'light' : 'dark';
+
+      document.body.classList.toggle('light-mode', nextLight);
+      localStorage.setItem('theme', theme);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('theme', theme);
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+
+      syncLinks(theme);
+    });
+  </script>
+
+</body>
+
+</html>

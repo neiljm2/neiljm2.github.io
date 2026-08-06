@@ -229,7 +229,7 @@
     .code-link-btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 0.5rem;
       background-color: var(--surface-bg);
       color: var(--text-primary);
@@ -240,7 +240,7 @@
       font-size: 0.85rem;
       font-weight: 600;
       transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-      width: 100%;
+      width: 110%;
     }
 
     .code-link-btn:hover {
@@ -447,11 +447,6 @@
   <!-- PROJECT HEADER -->
   <header class="project-header">
     <h1>6-Axis Robotic Arm from Scratch</h1>
-    <p class="subtitle">
-      <a href="6-Axis%20Robotic%20Arm%20Official%20Documentation.pdf" target="_blank" class="doc-link">
-        View In-Depth Technical Documentation &rarr;
-      </a>
-    </p>
   </header>
 
   <!-- MAIN PROJECT LAYOUT -->
@@ -469,6 +464,10 @@
           <a href="6-axis-robotic-arm-code.html?file=python" target="_blank" class="code-link-btn">
             <img src="../../images/python-logo.png" alt="Python Logo" class="code-logo-icon" />
             Backend (backend.py)
+          </a>
+          <a href="https://github.com/david-savenok/EOH-Robot.git" target="_blank" class="code-link-btn">
+            <img src="../../images/github_logo.png" alt="GitHub Logo" class="code-logo-icon" />
+            Full Repository
           </a>
         </div>
       </div>
@@ -493,15 +492,15 @@
       <!-- Project Overview -->
       <article class="scrollable-details">
         <h2>Project Overview</h2>
-        <p>
-          This project involved building a custom 6-axis robotic arm from scratch on a $300 budget for UIUC's
-          Engineering Open House (EOH) with fully in-house mechanical design, circuit design, controls, and backend
-          programming. Of these, I led the
-          development
-          of the controls and the electronic hardware. The primary goal was to navigate the end-effector smoothly
-          through the
-          arm's task space with bonus goals of pick-and-place and light painting.
-        </p>
+        <ul>
+          <li><strong>Budget &amp; Event:</strong> Built from scratch on a strict $300 budget for UIUC's Engineering
+            Open House (EOH).</li>
+          <li><strong>In-House Design:</strong> Handled full end-to-end mechanical design, circuit design, control
+            schemes, and backend solver development.</li>
+          <li><strong>My Role:</strong> Led the design and development of the controls and electrical hardware.</li>
+          <li><strong>Objectives:</strong> Navigating the end-effector smoothly through its task space, with bonus goals
+            of pick-and-place and light painting.</li>
+        </ul>
       </article>
       <!-- Interactive 3D Model Viewer -->
       <div class="media-container" style="height: 450px;">
@@ -515,10 +514,10 @@
       <article class="scrollable-details">
         <h2>Mechanical Design & Assembly</h2>
         <p>
-          The arm was modeled in Fusion 360, factoring in strength, rotational limits, and weight
-          distribution. The linkages consisted of pieces of 80/20 aluminum extrusion for strength
-          and 3D printed PLA for precise electronics housing and attach points. The design of the
-          arm was inspired by the UR3 robotic arm, which was chosen for its simple joint configuration,
+          The arm was modeled in <strong>Fusion 360</strong>, factoring in strength, rotational limits, and weight
+          distribution. The linkages consisted of pieces of <strong>80/20 aluminum extrusion</strong> for strength
+          and <strong>3D printed PLA</strong> for precise electronics housing and attach points. The design of the
+          arm was inspired by the <strong>UR3 robotic arm</strong>, which was chosen for its simple joint configuration,
           especially at the wrist.
         </p>
       </article>
@@ -532,10 +531,14 @@
       <article class="scrollable-details">
         <h2>Electrical Design</h2>
         <p>
-          Before implementing the electrical system, I created a comprehensive schematic to plan power delivery,
-          motor control, and sensor feedback. The goal of the schematic was to act as a blueprint for the entire
-          electrical system, ensuring that all components were properly connected and also to learn about the motors,
-          control modules, encoders, and microcontroller while budget constraints prevented us from getting our hands
+          Before implementing the electrical system, I created a comprehensive <strong>circuit schematic</strong> to
+          plan <strong>power delivery</strong>,
+          <strong>motor control</strong>, and <strong>sensor feedback</strong>. The goal of the schematic was to act as
+          a blueprint for the entire
+          electrical system, ensuring that all components were properly connected and also to learn about the
+          <strong>motors</strong>,
+          <strong>control modules</strong>, <strong>encoders</strong>, and <strong>microcontroller</strong> at a time
+          when budget constraints prevented us from getting our hands
           on the hardware yet.
         </p>
       </article>
@@ -549,30 +552,37 @@
       <article class="scrollable-details">
         <h2>Electronic Components</h2>
         <p>
-          For actuation, I chose to use four NEMA stepper motors for the base, shoulder, elbow, and one wrist joint
-          along with two lighter DC motors for the other two wrist joints. The steppers were chosen for their very high
+          For actuation, I chose to use four <strong>NEMA stepper motors</strong> for the base, shoulder, elbow, and one
+          wrist joint
+          along with two lighter <strong>DC motors</strong> for the other two wrist joints. The steppers were chosen for
+          their very high
           torque-to-price ratio while DC motors had to be used at the outer joints due to weight constraints. The base
-          and shoulder motors were equipped with a 20:1 and 50:1 gearbox respectively to further increase their torque
+          and shoulder motors were equipped with a 20:1 and 50:1 <strong>gearbox</strong> respectively to further
+          increase their torque
           output. Ideally we would have opted for higher quality DC motors with high precision and torque, however with
           a budget of $300 we couldn't afford to put any more than $100 towards motors and gearboxes, so we had to make
           do with the best we could get our hands on.
           <br>
           <br>
-          For stepper control, we opted for the popular A4988 motor drivers, which were chosen for their low
+          For stepper control, we opted for <strong>A4988 motor drivers</strong>, which were chosen for their low
           price, small form factor, and ease of use with the Arduino platform. For the two DC motors, we chose an
-          L298N H-bridge motor driver for its high current throughput and ability to control two motors at once.
+          <strong>L298N H-bridge motor driver</strong> for its high current throughput and ability to control two motors
+          at once.
           <br>
           <br>
           For
-          position feedback, we used a set of magnetic hall effect sensors at each joint to read the angle of the
+          position feedback, we used a set of magnetic <strong>hall effect encoders</strong> at each joint to read the
+          angle of the
           motor shaft, which we mounted to the back of each motor with some 3D printed brackets. We chose these sensors
           for their extremely low cost with relatively high precision. This allowed us to
-          achieve a resolution of ~1 degree on the non-gearboxed joints and <0.5 degree precision on our gearboxed
-            joints. <br>
-            <br>
-            The brain of the arm was an Arduino Mega, which was desired for its large number of PWM pins and the
-            simplicity
-            of the Arduino platform.
+          achieve a <strong>resolution of ~1 degree</strong> on the non-gearboxed joints and <strong>&lt;0.5 degree
+            precision</strong> on our gearboxed
+          joints. <br>
+          <br>
+          The brain of the arm was an <strong>Arduino Mega</strong>, which was desired for its large number of
+          <strong>PWM pins</strong> and the
+          because the Arduino platform is a great introductory microcontroller.
+        </p>
       </article>
 
       <!-- Media Card 2: Wiring in Progress (WIP) -->
@@ -583,29 +593,32 @@
       <article class="scrollable-details">
         <h2>Control</h2>
         <p>
-          The system uses a custom Arduino-based control scheme to control the 6-axis robotic arm, seamlessly
-          integrating four stepper motors and two DC motors. To achieve smooth, non-blocking motion, the stepper axes
-          are
-          driven by hardware timers configured in CTC (Clear Timer on Compare Match) mode, utilizing Interrupt Service
-          Routines (ISRs) for precise, jitter-free step generation. The input to the control scheme is a comma
-          delineated
-          vector of target angles sent over serial, with one angle for each motor. The firmware then calculates the
-          required displacement for each
-          joint and scales their step frequencies proportionally, ensuring all four axes start and finish their paths
-          simultaneously. To avoid blocking commands such as delay, each timestep the script checks whether or not each
+          The system uses a custom <strong>Arduino-based control scheme</strong> to control the 6-axis robotic arm,
+          seamlessly
+          integrating four stepper motors and two DC motors. To achieve smooth, <strong>non-blocking motion</strong>,
+          the stepper axes
+          are driven by <strong>hardware timers</strong> configured in <strong>CTC (Clear Timer on Compare Match)
+            mode</strong>, utilizing <strong>Interrupt Service Routines (ISRs)</strong> for precise, jitter-free step
+          generation. The input to the control scheme is a comma delineated
+          vector of target angles sent over <strong>serial</strong>, with one angle for each motor. The firmware then
+          calculates the
+          required displacement for each joint and scales their step frequencies proportionally, ensuring all four axes
+          start and finish their paths
+          simultaneously. To avoid blocking commands such as delay(), in each timestep the script checks whether or not
+          each
           motor should step or not based on its scaled frequency, setting the step pins true or false accordingly.
-          Furthermore, these steppers operate in a
-          closed-loop configuration, utilizing hall effect magnetic encoders and gear-ratio mathematics to dynamically
+          Furthermore, these steppers operate in a <strong>closed-loop configuration</strong>, utilizing <strong>hall
+            effect magnetic encoders</strong> and gear-ratio mathematics to dynamically
           correct positional errors and avoid drift.
           <br>
           <br>
           Complementing the stepper joints, the two DC motor axes are driven by H-bridges and regulated by a custom
-          Proportional (P) control loop. This loop continuously calculates real-time positional error based on
+          <strong>Proportional (P) control loop</strong>. This loop continuously calculates real-time positional error
+          based on
           encoder feedback, applying dynamic PWM adjustments and directional switching to smoothly drive the joints to
-          their target angles. To handle multi-turn operations, the DC control scheme features custom zero-crossing
-          logic that accurately tracks continuous rotations.
+          their target angles. To handle multi-turn operations, the DC control scheme features custom
+          <strong>zero-crossing logic</strong> that accurately tracks continuous rotations.
         </p>
-
       </article>
 
       <div class="media-container">
@@ -618,12 +631,16 @@
       <article class="scrollable-details">
         <h2>Backend Software</h2>
         <p>
-          To calculate the joint angles necessary for smooth cartesian path tracking, I developed a Python-based backend
-          that handles the arm's inverse kinematics (IK). The software implements a decoupled kinematic model: it
-          analytically computes the base rotation to align with the target plane, and then applies a non-linear
-          least-squares optimization solver (`scipy.optimize.least_squares` from SciPy) to solve for the planar joint
+          To calculate the joint angles necessary for smooth cartesian path tracking, I developed a <strong>Python-based
+            backend</strong>
+          that handles the arm's <strong>inverse kinematics</strong>. The software implements a <strong>decoupled
+            kinematic model</strong>: it
+          analytically computes the base rotation to align with the target plane, and then applies a <strong>non-linear
+            least-squares optimization solver</strong> (<strong><code>scipy.optimize.least_squares</code></strong> from
+          SciPy) to solve for the planar joint
           angles within physical limits. Once the trajectory is calculated, the backend packages the coordinate sequence
-          into a custom serial command packet and streams it to the Arduino over USB, enabling complex multi-point path
+          into a custom <strong>serial command packet</strong> and streams it to the Arduino over USB, enabling complex
+          multi-point path
           execution.
         </p>
       </article>
@@ -662,11 +679,13 @@
           Tragically, the night before EOH at around 4am, the executive decision had to be made to remove the fourth
           joint due to the arm struggling to support its own weight, a problem that can be traced back to our motors
           being too weak along with our custom linkages being too heavy. During EOH, the arm was successfully able to
-          navigate its task space still, but as a 5-axis robot arm instead of a 6-axis robot arm. Due to this last
+          navigate its task space still, but as a <strong>5-axis robot arm</strong> instead of a 6-axis robot arm. Due
+          to this last
           minute major change, we also had to scrap the pick and place and light painting tasks we had designed. Despite
           this shortcoming right at the very end, this project was still a major success in my book. Doing everything
           from scratch forced me step very far out of my comfort zone in a way that taught me many hard skills but also
-          invaluable soft skills such as leadership and the ability to perform under pressure. Most importantly, the
+          invaluable soft skills such as <strong>leadership</strong> and the ability to <strong>perform under
+            pressure</strong>. Most importantly, the
           great times I had with friends and teammates was something I will never forget and made all of the sleepless
           nights worth it.
         </p>
@@ -686,45 +705,25 @@
         <a href="https://www.linkedin.com/in/christopher-egly/" target="_blank" class="collaborator-card"
           aria-label="Christopher Egly's LinkedIn Profile">
           <span class="collab-name">Christopher Egly</span>
-          <span class="linkedin-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-            </svg>
-          </span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
         </a>
         <!-- Collab 3: A. Park -->
         <a href="https://www.linkedin.com/in/apark6514/" target="_blank" class="collaborator-card"
           aria-label="A. Park's LinkedIn Profile">
           <span class="collab-name">Andrew Park</span>
-          <span class="linkedin-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-            </svg>
-          </span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
         </a>
         <!-- Collab 4: Nicole Canfield -->
         <a href="https://www.linkedin.com/in/nicolecanfield/" target="_blank" class="collaborator-card"
           aria-label="Nicole Canfield's LinkedIn Profile">
           <span class="collab-name">Nicole Canfield</span>
-          <span class="linkedin-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-            </svg>
-          </span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
         </a>
         <!-- Collab 5: David Savenok -->
         <a href="https://www.linkedin.com/in/david-savenok/" target="_blank" class="collaborator-card"
           aria-label="David Savenok's LinkedIn Profile">
           <span class="collab-name">David Savenok</span>
-          <span class="linkedin-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-            </svg>
-          </span>
+          <img src="../../images/linkedin-logo.png" alt="LinkedIn Logo" class="linkedin-icon" />
         </a>
       </div>
     </aside>
