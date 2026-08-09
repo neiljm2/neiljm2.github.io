@@ -383,6 +383,115 @@
         width: 100%;
       }
     }
+
+    /* --- LIGHTBOX MODAL --- */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      color: #f8fafc;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10001;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .lightbox-close:hover {
+      color: var(--primary-color);
+      transform: scale(1.1);
+    }
+
+    .lightbox-content-wrapper {
+      position: relative;
+      width: 90%;
+      height: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      cursor: grab;
+    }
+
+    .lightbox-content-wrapper:active {
+      cursor: grabbing;
+    }
+
+    .lightbox-content {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.1s ease-out;
+      transform-origin: center center;
+    }
+
+    .lightbox-controls {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 10001;
+    }
+
+    .lightbox-controls button {
+      background-color: var(--surface-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .lightbox-controls button:hover {
+      background-color: var(--border-color);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* --- MERMAID DIAGRAM OVERRIDES --- */
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      background: transparent !important;
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+    /* Match diagram font family and size with the rest of the page */
+    .mermaid * {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+      font-size: 1rem !important;
+    }
+
   </style>
 </head>
 
@@ -453,10 +562,14 @@
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <ul>
-          <li><strong>Course &amp; Context:</strong> Developed for UIUC's SE 423 (Mechatronics) course as an autonomous robotics project.</li>
-          <li><strong>In-House Design:</strong> Designed the sensor fusion matrix, motor drive mounts, and LabVIEW control layout.</li>
-          <li><strong>My Role:</strong> Focused on control loop coding, sensor calibration, and LabVIEW dynamic mapping.</li>
-          <li><strong>Objectives:</strong> Navigating target spaces autonomously via SLAM, localization, and launching a golf ball into a cup.</li>
+          <li><strong>Course &amp; Context:</strong> Developed for UIUC's SE 423 (Mechatronics) course as an autonomous
+            robotics project.</li>
+          <li><strong>In-House Design:</strong> Designed the sensor fusion matrix, motor drive mounts, and LabVIEW
+            control layout.</li>
+          <li><strong>My Role:</strong> Focused on control loop coding, sensor calibration, and LabVIEW dynamic mapping.
+          </li>
+          <li><strong>Objectives:</strong> Navigating target spaces autonomously via SLAM, localization, and launching a
+            golf ball into a cup.</li>
         </ul>
       </article>
 
@@ -469,8 +582,10 @@
       <article class="scrollable-details">
         <h2>Mechanical &amp; Sensor Integration</h2>
         <p>
-          The chassis was constructed using <strong>custom mounts</strong> to align the motor shafts and sensor arrays. We integrated
-          high-resolution <strong>wheel encoders</strong> for odometer readings alongside <strong>distance sensors</strong> to feed
+          The chassis was constructed using <strong>custom mounts</strong> to align the motor shafts and sensor arrays.
+          We integrated
+          high-resolution <strong>wheel encoders</strong> for odometer readings alongside <strong>distance
+            sensors</strong> to feed
           localized spatial matrices into the mapping controller. This <strong>sensor fusion loop</strong> ensured drift
           correction during active navigation.
         </p>
@@ -479,11 +594,14 @@
       <article class="scrollable-details">
         <h2>Control Loop Design</h2>
         <p>
-          The <strong>low-level controls</strong> were written in <strong>C</strong>, handling <strong>PID velocity loops</strong> for
+          The <strong>low-level controls</strong> were written in <strong>C</strong>, handling <strong>PID velocity
+            loops</strong> for
           the drive motors.
-          <strong>LabVIEW</strong> was utilized to build the <strong>high-level supervisory controls</strong> and <strong>path planning
+          <strong>LabVIEW</strong> was utilized to build the <strong>high-level supervisory controls</strong> and
+          <strong>path planning
             interface</strong>,
-          allowing <strong>real-time trajectory visualization</strong> and parameter tuning during autonomous putting runs.
+          allowing <strong>real-time trajectory visualization</strong> and parameter tuning during autonomous putting
+          runs.
         </p>
       </article>
 
@@ -506,10 +624,47 @@
       </div>
 
       <article class="scrollable-details">
+        <h2>Finite State Machine &amp; Control Flow</h2>
+        <p>
+          The robot's autonomous decision-making routine was governed by a <strong>Finite State Machine (FSM)</strong>.
+          The chart below illustrates the transition conditions and core subroutines executed inside each state to map
+          the arena, acquire the ball, and score:
+        </p>
+      </article>
+
+      <!-- Interactive FSM Diagram Card -->
+      <div class="media-container" style="background-color: var(--surface-bg); padding: 1.5rem; overflow-x: auto;">
+        <pre class="mermaid">
+stateDiagram-v2
+    [*] --> State_0: Initialization completed
+
+    state "State 0: Map & Search Arena<br/>• Follows right wall, avoiding obstacles<br/>• Searches for ball and goal<br/>• Maps ball, goal, obstacles, and walls" as State_0
+    state "State 1: Finish Arena Search<br/>• If ball or goal haven't been found yet, employs grid search of current map<br/>• Maps ball, goal, obstacles, and walls" as State_1
+    state "State 10: Line Up Shot<br/>• Navigate behind the ball with respect to goal, avoiding and mapping obstacles<br/>• Turn towards ball" as State_10
+    state "State 20: Ball Acquisition<br/>• Open kicker cover<br/>• Move forward to position ball in front of kicker" as State_20
+    state "State 21: Drive Towards Goal<br/>• Navigate to goal, avoiding and mapping obstacles<br/>• Lower kicker cover to capture ball<br/>• Approach goal" as State_21
+    state "State 22: Score!<br/>• Turn towards goal<br/>• Open kicker cover<br/>• Kick ball into goal" as State_22
+
+    State_0 --> State_10 : • Mapped arena outer wall (returned to start)<br/>• Ball found<br/>• Goal found
+    State_0 --> State_1 : • Mapped arena outer wall (returned to start)<br/>• Ball and/or goal not found
+
+    State_1 --> State_10 : • Ball found<br/>• Goal found
+
+    State_10 --> State_20 : • Navigated to target position and heading
+
+    State_20 --> State_21 : • Ball right in front of kicker (drove forward for calculated amount of time)
+
+    State_21 --> State_22 : • &lt; 3 feet from goal
+        </pre>
+      </div>
+
+      <article class="scrollable-details">
         <h2>Outcome</h2>
         <p>
-          The autonomous putter successfully completed its spatial mapping routine and completed <strong>putting trials</strong> with
-          high repeatability. The control software reliably calculated the necessary <strong>launch velocity vector</strong>, correcting
+          The autonomous putter successfully completed its spatial mapping routine and completed <strong>putting
+            trials</strong> with
+          high repeatability. The control software reliably calculated the necessary <strong>launch velocity
+            vector</strong>, correcting
           for <strong>odometer slip</strong> and drift in real-time.
         </p>
       </article>
@@ -542,6 +697,19 @@
     </aside>
 
   </main>
+
+  <!-- IMAGE LIGHTBOX MODAL -->
+  <div id="lightbox-modal" class="lightbox-modal">
+    <span class="lightbox-close">&times;</span>
+    <div class="lightbox-content-wrapper">
+      <img class="lightbox-content" id="lightbox-img" src="" alt="Expanded Image" />
+    </div>
+    <div class="lightbox-controls">
+      <button id="zoom-in-btn" title="Zoom In">➕</button>
+      <button id="zoom-out-btn" title="Zoom Out">➖</button>
+      <button id="reset-btn" title="Reset Zoom">🔄</button>
+    </div>
+  </div>
 
   <script>
     const toggleSwitch = document.querySelector('#checkbox');
@@ -588,6 +756,167 @@
       window.history.replaceState({}, '', url.pathname + url.search + url.hash);
 
       syncLinks(theme);
+
+      // Reload page to re-render Mermaid diagram theme colors
+      window.location.reload();
+    });
+
+    // Lightbox Functionality
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const wrapper = document.querySelector('.lightbox-content-wrapper');
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    let zoomScale = 1;
+    let isPanning = false;
+    let startX = 0, startY = 0;
+    let translateX = 0, translateY = 0;
+
+    // Attach click listener to all page images (except icons / sidebar links)
+    document.querySelectorAll('.project-content img').forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxModal.style.display = 'flex';
+        resetLightbox();
+      });
+    });
+
+    function resetLightbox() {
+      zoomScale = 1;
+      translateX = 0;
+      translateY = 0;
+      updateTransform();
+    }
+
+    function updateTransform() {
+      lightboxImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+    }
+
+    // Close Modal
+    lightboxClose.addEventListener('click', closeModal);
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target === lightboxModal || e.target === wrapper) {
+        closeModal();
+      }
+    });
+
+    // Close on outer touch for mobile
+    lightboxModal.addEventListener('touchstart', (e) => {
+      if (e.target === lightboxModal) {
+        closeModal();
+      }
+    });
+
+    function closeModal() {
+      lightboxModal.style.display = 'none';
+    }
+
+    // Escape Key Close
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Zoom Buttons
+    zoomInBtn.addEventListener('click', () => {
+      zoomScale = Math.min(zoomScale + 0.25, 4);
+      updateTransform();
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+      zoomScale = Math.max(zoomScale - 0.25, 0.5);
+      updateTransform();
+    });
+
+    resetBtn.addEventListener('click', resetLightbox);
+
+    // Mouse Wheel Zoom
+    wrapper.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = 0.1;
+      if (e.deltaY < 0) {
+        zoomScale = Math.min(zoomScale + zoomFactor, 4);
+      } else {
+        zoomScale = Math.max(zoomScale - zoomFactor, 0.5);
+      }
+      updateTransform();
+    });
+
+    // Panning Functionality
+    wrapper.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isPanning = true;
+      startX = e.clientX - translateX;
+      startY = e.clientY - translateY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isPanning) return;
+      translateX = e.clientX - startX;
+      translateY = e.clientY - startY;
+      updateTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isPanning = false;
+    });
+
+    // Touch support for mobile panning and pinch-to-zoom
+    let initialTouchDist = 0;
+    wrapper.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isPanning = true;
+        startX = e.touches[0].clientX - translateX;
+        startY = e.touches[0].clientY - translateY;
+      } else if (e.touches.length === 2) {
+        isPanning = false;
+        initialTouchDist = getTouchDist(e);
+      }
+    });
+
+    wrapper.addEventListener('touchmove', (e) => {
+      if (isPanning && e.touches.length === 1) {
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+        updateTransform();
+      } else if (e.touches.length === 2) {
+        const dist = getTouchDist(e);
+        const factor = dist / initialTouchDist;
+        zoomScale = Math.max(0.5, Math.min(4, zoomScale * factor));
+        initialTouchDist = dist;
+        updateTransform();
+      }
+    });
+
+    wrapper.addEventListener('touchend', () => {
+      isPanning = false;
+    });
+
+    function getTouchDist(e) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+  </script>
+
+  <!-- Include Mermaid JS dynamically -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    const isLight = document.body.classList.contains('light-mode');
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: isLight ? 'neutral' : 'dark',
+      themeVariables: {
+        fontSize: '16px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      },
+      state: {
+        useMaxWidth: false
+      }
     });
   </script>
 
