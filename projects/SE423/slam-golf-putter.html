@@ -331,14 +331,18 @@
     }
 
     .scrollable-details ul {
-      margin-left: 1.5rem;
+      list-style-type: disc;
+      list-style-position: inside;
+      margin-left: 0;
       margin-bottom: 1.25rem;
       color: var(--text-secondary);
       transition: color 0.3s ease;
     }
 
     .scrollable-details li {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      text-indent: -2.25rem;
+      padding-left: 2.25rem;
     }
 
     /* --- 2x2 VIDEO GRID --- */
@@ -474,24 +478,52 @@
     }
 
     /* --- MERMAID DIAGRAM OVERRIDES --- */
-    .mermaid {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      background: transparent !important;
-    }
-
-    .mermaid svg {
+    .fsm-container svg {
       max-width: 100%;
       height: auto;
+      display: block !important;
+      margin: 0 auto !important;
     }
+
     /* Match diagram font family and size with the rest of the page */
-    .mermaid * {
+    .fsm-container svg * {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
       font-size: 1rem !important;
     }
 
+    /* Improve contrast of transition description backgrounds */
+    .fsm-container svg .edgeLabel rect {
+      fill: var(--bg-color) !important;
+      fill-opacity: 0.95 !important;
+      stroke: var(--border-color) !important;
+      stroke-width: 1px !important;
+      rx: 4px;
+      /* rounded corners */
+      ry: 4px;
+    }
+
+    .fsm-container svg .edgeLabel span,
+    .fsm-container svg .edgeLabel div {
+      background-color: var(--bg-color) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 4px !important;
+      padding: 4px 8px !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+      display: inline-block !important;
+    }
+
+    /* Center text inside state bubbles */
+    .fsm-container svg .node text,
+    .fsm-container svg .node tspan {
+      text-anchor: middle !important;
+    }
+
+    .fsm-container svg .node .label,
+    .fsm-container svg .node .nodeLabel,
+    .fsm-container svg .node .label div,
+    .fsm-container svg .node .label span {
+      text-align: center !important;
+    }
   </style>
 </head>
 
@@ -524,20 +556,14 @@
       <div class="sidebar-section">
         <h3>Project Code</h3>
         <div class="code-links-container">
-          <a href="FinalProjMain.c" target="_blank" class="code-link-btn">
-            <img src="../../images/python-logo.png" alt="C Logo" class="code-logo-icon"
-              style="filter: hue-rotate(90deg);" />
+          <a href="slam-golf-putter-code.html?file=c" target="_blank" class="code-link-btn">
+            <img src="../../images/c_logo.webp" alt="C Logo" class="code-logo-icon" />
             Main Loop (FinalProjMain.c)
           </a>
-          <a href="PERSONALPROJ_NM.c" target="_blank" class="code-link-btn">
-            <img src="../../images/python-logo.png" alt="C Logo" class="code-logo-icon"
-              style="filter: hue-rotate(90deg);" />
-            Personal Logic (PERSONALPROJ_NM.c)
-          </a>
-          <a href="FinalProject_NM_CE_JY_RW.h" target="_blank" class="code-link-btn">
-            <img src="../../images/python-logo.png" alt="Header Logo" class="code-logo-icon"
-              style="filter: hue-rotate(180deg);" />
-            Constants (FinalProject_NM_CE_JY_RW.h)
+          <a href="https://github.com/yuan41/SE423_repo/tree/main/workspace/FinalProject_NM_CE_JY_RW" target="_blank"
+            class="code-link-btn">
+            <img src="../../images/github_logo.png" alt="GitHub Logo" class="code-logo-icon" />
+            Full Repository
           </a>
         </div>
       </div>
@@ -545,12 +571,13 @@
       <div class="sidebar-section" style="margin-top: 2rem;">
         <h3>Skills Used</h3>
         <div class="skills-container">
-          <span class="skill-badge">Autonomous Navigation</span>
-          <span class="skill-badge">SLAM Mapping</span>
-          <span class="skill-badge">Hall Effect Encoders</span>
-          <span class="skill-badge">C Programming</span>
-          <span class="skill-badge">LabVIEW Controls</span>
-          <span class="skill-badge">Signal Processing</span>
+          <span class="skill-badge">Navigation</span>
+          <span class="skill-badge">SLAM</span>
+          <span class="skill-badge">Computer Vision</span>
+          <span class="skill-badge">C</span>
+          <span class="skill-badge">LabVIEW</span>
+          <span class="skill-badge">State Machines</span>
+          <span class="skill-badge">LiDAR</span>
         </div>
       </div>
     </aside>
@@ -562,69 +589,28 @@
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <ul>
-          <li><strong>Course &amp; Context:</strong> Developed for UIUC's SE 423 (Mechatronics) course as an autonomous
-            robotics project.</li>
-          <li><strong>In-House Design:</strong> Designed the sensor fusion matrix, motor drive mounts, and LabVIEW
-            control layout.</li>
-          <li><strong>My Role:</strong> Focused on control loop coding, sensor calibration, and LabVIEW dynamic mapping.
-          </li>
-          <li><strong>Objectives:</strong> Navigating target spaces autonomously via SLAM, localization, and launching a
-            golf ball into a cup.</li>
+          <li><strong>Course &amp; Assignment:</strong> Final project for SE 423 (Mechatronics) where the goal was to
+            execute a
+            unique robotics project involving <strong>path planning, perception, and control systems</strong></li>
+          <li><strong>Objective:</strong> Utilizing a robotic car, map an arena, autonomously
+            navigate, find a golf ball, and launch it into a cup.</li>
+          <li><strong>My Role:</strong> Focused on SLAM mapping, gradient-descent pathing, state machine logic, and
+            LABVIEW visualization.</li>
         </ul>
       </article>
 
-      <!-- Media Card 1: Team Pic -->
+      <!-- LabVIEW Video -->
       <div class="media-container">
-        <img src="Team Pic.jpg" alt="SLAM Golf Putter team assembly and system testing setup" />
-        <p class="media-caption">Figure 1: SLAM Golf Putter team assembly and system testing setup.</p>
+        <video autoplay loop muted playsinline controls>
+          <source src="demo_labview.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Demo with real-time mapping in LABVIEW.</p>
       </div>
 
+      <!-- FSM Section -->
       <article class="scrollable-details">
-        <h2>Mechanical &amp; Sensor Integration</h2>
-        <p>
-          The chassis was constructed using <strong>custom mounts</strong> to align the motor shafts and sensor arrays.
-          We integrated
-          high-resolution <strong>wheel encoders</strong> for odometer readings alongside <strong>distance
-            sensors</strong> to feed
-          localized spatial matrices into the mapping controller. This <strong>sensor fusion loop</strong> ensured drift
-          correction during active navigation.
-        </p>
-      </article>
-
-      <article class="scrollable-details">
-        <h2>Control Loop Design</h2>
-        <p>
-          The <strong>low-level controls</strong> were written in <strong>C</strong>, handling <strong>PID velocity
-            loops</strong> for
-          the drive motors.
-          <strong>LabVIEW</strong> was utilized to build the <strong>high-level supervisory controls</strong> and
-          <strong>path planning
-            interface</strong>,
-          allowing <strong>real-time trajectory visualization</strong> and parameter tuning during autonomous putting
-          runs.
-        </p>
-      </article>
-
-      <!-- Video Grid -->
-      <div class="video-grid">
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="demo_success.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">Autonomous Path Completion and Successful Putt</p>
-        </div>
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="demo_labview.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">LabVIEW Real-Time Mapping Interface Demo</p>
-        </div>
-      </div>
-
-      <article class="scrollable-details">
-        <h2>Finite State Machine &amp; Control Flow</h2>
+        <h2>State Machine &amp; Control Flow</h2>
         <p>
           The robot's autonomous decision-making routine was governed by a <strong>Finite State Machine (FSM)</strong>.
           The chart below illustrates the transition conditions and core subroutines executed inside each state to map
@@ -633,41 +619,72 @@
       </article>
 
       <!-- Interactive FSM Diagram Card -->
-      <div class="media-container" style="background-color: var(--surface-bg); padding: 1.5rem; overflow-x: auto;">
+      <div class="media-container fsm-container"
+        style="background-color: var(--surface-bg); padding: 1.5rem; overflow-x: auto;">
         <pre class="mermaid">
 stateDiagram-v2
     [*] --> State_0: Initialization completed
 
-    state "State 0: Map & Search Arena<br/>• Follows right wall, avoiding obstacles<br/>• Searches for ball and goal<br/>• Maps ball, goal, obstacles, and walls" as State_0
-    state "State 1: Finish Arena Search<br/>• If ball or goal haven't been found yet, employs grid search of current map<br/>• Maps ball, goal, obstacles, and walls" as State_1
-    state "State 10: Line Up Shot<br/>• Navigate behind the ball with respect to goal, avoiding and mapping obstacles<br/>• Turn towards ball" as State_10
-    state "State 20: Ball Acquisition<br/>• Open kicker cover<br/>• Move forward to position ball in front of kicker" as State_20
-    state "State 21: Drive Towards Goal<br/>• Navigate to goal, avoiding and mapping obstacles<br/>• Lower kicker cover to capture ball<br/>• Approach goal" as State_21
-    state "State 22: Score!<br/>• Turn towards goal<br/>• Open kicker cover<br/>• Kick ball into goal" as State_22
+    state "<b>State 0: Map & Search Arena</b><br/>• Follows right wall, avoiding obstacles<br/>• Searches for ball and goal<br/>• Maps ball, goal, obstacles, and walls" as State_0
+    state "<b>State 1: Finish Arena Search</b><br/>• If ball/goal not found yet, employs<br/>grid search of current map<br/>• Maps ball, goal, obstacles, & walls" as State_1
+    state "<b>State 10: Line Up Shot</b><br/>• Navigate behind ball relative to goal,<br/>avoiding & mapping obstacles<br/>• Turn towards ball" as State_10
+    state "<b>State 20: Ball Acquisition</b><br/>• Open kicker cover<br/>• Move forward to position ball<br/>in front of kicker" as State_20
+    state "<b>State 21: Drive Towards Goal</b><br/>• Navigate to goal, avoiding<br/>& mapping obstacles<br/>• Lower kicker cover to capture ball<br/>• Approach goal" as State_21
+    state "<b>State 22: Score!</b><br/>• Turn towards goal<br/>• Open kicker cover<br/>• Kick ball into goal" as State_22
+    State_0 --> State_1 : • Mapped outer wall<br/>(returned to start)<br/>• Ball/goal not found
+    State_1 --> State_10 : • Ball & goal found
+    State_0 --> State_10 : • Mapped outer wall<br/>(returned to start)<br/>• Ball & goal found
 
-    State_0 --> State_10 : • Mapped arena outer wall (returned to start)<br/>• Ball found<br/>• Goal found
-    State_0 --> State_1 : • Mapped arena outer wall (returned to start)<br/>• Ball and/or goal not found
-
-    State_1 --> State_10 : • Ball found<br/>• Goal found
-
-    State_10 --> State_20 : • Navigated to target position and heading
-
-    State_20 --> State_21 : • Ball right in front of kicker (drove forward for calculated amount of time)
-
+    State_10 --> State_20 : • Reached target<br/>position & heading
+    State_20 --> State_21 : • Ball in front of kicker<br/>(drove forward for<br/>calculated time)
     State_21 --> State_22 : • &lt; 3 feet from goal
         </pre>
       </div>
 
+      <!-- Mapping Text -->
+      <article class="scrollable-details">
+        <h2>Mapping &amp; Exploration</h2>
+        <p>
+          High-level supervisory controls and map visualization were handled in real-time. The robot used <strong>LiDAR
+            (LADAR) scans</strong> to identify boundary walls and coordinate obstacles, writing the data into a
+          localized occupancy grid to dynamically track the arena geometry.
+        </p>
+      </article>
+
+      <!-- Navigation Text -->
+      <article class="scrollable-details">
+        <h2>Gradient Descent Navigation</h2>
+        <p>
+          Navigation was driven by a weighted <strong>gradient descent algorithm</strong>. The controller calculated
+          attractive forces pulling the robot toward waypoint coordinates and repulsive forces pushing it away from
+          mapped obstacle regions, steering smooth trajectories around hazards.
+        </p>
+      </article>
+
+      <!-- Success Video -->
+      <div class="media-container">
+        <video autoplay loop muted playsinline controls>
+          <source src="demo_success.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Figure 3: Autonomous Path Completion and Successful Putt.</p>
+      </div>
+
+      <!-- Outcome -->
       <article class="scrollable-details">
         <h2>Outcome</h2>
         <p>
           The autonomous putter successfully completed its spatial mapping routine and completed <strong>putting
-            trials</strong> with
-          high repeatability. The control software reliably calculated the necessary <strong>launch velocity
-            vector</strong>, correcting
-          for <strong>odometer slip</strong> and drift in real-time.
+            trials</strong> with high repeatability. The control software reliably calculated the necessary
+          <strong>launch velocity vector</strong>, correcting for <strong>odometer slip</strong> and drift in real-time.
         </p>
       </article>
+
+      <!-- Team Pic -->
+      <div class="media-container">
+        <img src="Team Pic.jpg" alt="SLAM Golf Putter team assembly and system testing setup" />
+        <p class="media-caption">Figure 4: SLAM Golf Putter team assembly and system testing setup.</p>
+      </div>
 
     </section>
 
@@ -725,9 +742,9 @@ stateDiagram-v2
       activeTheme = localTheme;
     }
 
-    const isLight = (activeTheme === 'light');
-    document.body.classList.toggle('light-mode', isLight);
-    toggleSwitch.checked = isLight;
+    const isThemeLight = (activeTheme === 'light');
+    document.body.classList.toggle('light-mode', isThemeLight);
+    toggleSwitch.checked = isThemeLight;
 
     function syncLinks(theme) {
       document.querySelectorAll('a').forEach(link => {
@@ -906,10 +923,10 @@ stateDiagram-v2
   <!-- Include Mermaid JS dynamically -->
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    const isLight = document.body.classList.contains('light-mode');
+    const isMermaidLight = document.body.classList.contains('light-mode');
     mermaid.initialize({
       startOnLoad: true,
-      theme: isLight ? 'neutral' : 'dark',
+      theme: isMermaidLight ? 'neutral' : 'dark',
       themeVariables: {
         fontSize: '16px',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
