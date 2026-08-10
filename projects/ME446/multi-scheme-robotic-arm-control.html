@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Multi-Scheme Control for Robotic Arm - Project Details</title>
+  <!-- MathJax for LaTeX -->
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     :root {
       /* Default: Night Mode */
@@ -508,9 +510,8 @@
       <div class="sidebar-section">
         <h3>Project Code</h3>
         <div class="code-links-container">
-          <a href="FINAL_PROJ.c" target="_blank" class="code-link-btn">
-            <img src="../../images/python-logo.png" alt="C Logo" class="code-logo-icon"
-              style="filter: hue-rotate(90deg);" />
+          <a href="multi-scheme-robotic-arm-control-code.html?file=c" class="code-link-btn">
+            <img src="../../images/c_logo.webp" alt="C Logo" class="code-logo-icon" />
             Control Loop (FINAL_PROJ.c)
           </a>
         </div>
@@ -519,12 +520,12 @@
       <div class="sidebar-section" style="margin-top: 2rem;">
         <h3>Skills Used</h3>
         <div class="skills-container">
-          <span class="skill-badge">Impedance Control</span>
-          <span class="skill-badge">Trajectory Tracking</span>
+          <span class="skill-badge">Robotic Arms</span>
+          <span class="skill-badge">Path Planning</span>
           <span class="skill-badge">C Programming</span>
-          <span class="skill-badge">PID Feedback</span>
-          <span class="skill-badge">DSP Processing</span>
-          <span class="skill-badge">Real-Time OS</span>
+          <span class="skill-badge">PID Control</span>
+          <span class="skill-badge">Task Space Control</span>
+          <span class="skill-badge">Impedance Control</span>
         </div>
       </div>
     </aside>
@@ -536,52 +537,124 @@
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <ul>
-          <li><strong>Course &amp; Context:</strong> Deployed as a core control challenge in UIUC's ME 446 (Robot Dynamics and Control) course.</li>
-          <li><strong>In-House Design:</strong> Programmed inner current loops, feedback gains, gravity compensation, and impedance parameters.</li>
-          <li><strong>My Role:</strong> Wrote the real-time C code and tuned gains on DSP hardware for active motion stability.</li>
-          <li><strong>Objectives:</strong> Achieving sub-millimeter trajectory tracking accuracy and smooth end-effector collision dampening.</li>
+          <li><strong>Course &amp; Context:</strong> Final cumulative project for my ME 446 (Robot
+            Dynamics and Control) course.</li>
+          <li><strong>Challenge:</strong> Guide a robotic arm's end effector peg a certain depth into a hole, then trace
+            a curved path with tight edges, then apply a ~5 Newtons to an egg.</li>
+          <li><strong>Methods Used:</strong> Task space control (Jacobian transpose), impedance control, friction
+            compensation, and smooth trajectory generation.<br>
+          </li>
         </ul>
       </article>
+
+      <div class="media-container">
+        <video autoplay loop muted playsinline controls>
+          <source src="demo_success.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Successful demo with a practice egg, later a real egg used successfully as well, but I
+          didn't record :(</p>
+      </div>
 
       <article class="scrollable-details">
         <h2>Control Architecture</h2>
         <p>
-          We developed a <strong>multi-loop feedback scheme</strong> that runs in <strong>real-time</strong> on a <strong>digital signal processor (DSP)</strong>. The
-          inner loop regulates <strong>motor currents</strong> at high frequencies, while the outer loop processes <strong>joint trajectory
-            errors</strong>,
-          dynamically adjusting the <strong>control gains</strong> based on the arm's active pose and velocity states. The schema tested
-          <strong>impedance control</strong>, <strong>gravity compensation</strong>, and <strong>feedback
-            linearization</strong>
-          to achieve <strong>sub-millimeter path tracking accuracy</strong>.
+          The core logic governing the robotic arm is written in C (<code>FINAL_PROJ.c</code>) and executes in real-time
+          at 1000 Hz. The system utilizes multiple advanced control strategies simultaneously:
+        </p>
+        <ul>
+          <li><strong>Task
+              Space Control (Jacobian Transpose):</strong> Instead of commanding individual joint angles
+            directly (<strong>joint space control</strong>), the control law operates entirely in the Cartesian "World"
+            frame (<strong>task space control</strong>). The error between the
+            desired XYZ position and the end effector's actual position is calculated for use in a <strong>PD
+              controller</strong>. The necessary restorative
+            Cartesian forces are computed and then projected into individual motor joint torques using the
+            <strong>Jacobian
+              Transpose</strong> matrix.
+          </li>
+          <li><strong>Impedance
+              Control & Transformations:</strong> The robot actively changes its
+            <strong>compliance</strong> depending
+            on the task. By rotating the World frame error into a local "Node" frame (using a Z-axis rotation matrix),
+            the controller can assign different stiffnesses (Proportional/Derivative gains) to different local axes. For
+            example, when tracing a tight curve, the arm can be set to be physically "soft" in the X and Y axes to
+            easily slide along the walls, while remaining completely rigid in the Z axis to maintain height. These local
+            Node forces are then transformed back to the World frame before applying the <strong>Jacobian
+              Transpose</strong>.
+          </li>
+          <li><strong>Feedforward
+              Friction Compensation:</strong> The arm implements directional <strong>Coulomb and
+              viscous
+              friction compensation</strong>. By evaluating the real-time angular velocity of each joint, the system
+            applies an opposing <strong>feedforward
+              torque</strong> to cancel out the physical drag of the motors.
+            When velocity is near zero, a high viscous damping gain prevents jitter and stabilizes the joint.</li>
+        </ul>
+
+        <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Point Struct Instruction Set</h3>
+        <p>
+          The arm's sequence of actions is defined by an array of <code>point</code> structs. Each waypoint contains a
+          specific set of instructions that configures the controller dynamically as the arm reaches it:
+        </p>
+        <pre
+          style="background: var(--surface-bg); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; font-size: 0.9rem; overflow-x: auto; margin-bottom: 1rem;"><code style="color: var(--text-primary);">typedef struct point_tag {
+    float x;    <span style="color: var(--text-secondary);">// Target Cartesian X position in meters (World Frame)</span>
+    float y;    <span style="color: var(--text-secondary);">// Target Cartesian Y position in meters (World Frame)</span>
+    float z;    <span style="color: var(--text-secondary);">// Target Cartesian Z position in meters (World Frame)</span>
+    float thz;  <span style="color: var(--text-secondary);">// Rotation angle (Theta Z) to orient the "Node" stiffness frame</span>
+    float V;    <span style="color: var(--text-secondary);">// Desired travel velocity (m/s) to reach this point</span>
+    int mode;   <span style="color: var(--text-secondary);">// Impedance Mode (XYZSTIFF, ZSTIFF, XZSTIFF, XYSTIFF, LOWSTIFF)</span>
+} point;</code></pre>
+        <p>
+          The <code>thz</code> and <code>mode</code> parameters allow the controller to seamlessly transition between
+          rigid tracking and soft compliance on the fly. For instance, when applying force to a delicate egg, the arm
+          can switch to <strong>XYSTIFF</strong>
+          mode, allowing it to gently rest against the object in the Z direction
+          without breaking it.
         </p>
       </article>
 
-      <!-- Video Grid -->
-      <div class="video-grid">
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="demo_success.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">Trajectory Tracking Test Success</p>
+      <article class="scrollable-details">
+        <h2>Trajectory Generation</h2>
+        <p>
+          To move between the waypoints defined in the struct array smoothly, the controller employs a <strong>linear
+            trajectory
+            generator</strong>. When the arm is commanded to move from its current position to the next target point, it
+          doesn't
+          instantly jump the reference command to the final destination (which would cause a massive error spike and
+          violently jerk the arm).
+        </p>
+        <p>
+          Instead, the system calculates the 3D Cartesian distance (<code>distAB</code>) between the start point and the
+          end point. Using the desired velocity (<code>V</code>) specified in the target's struct, it determines the
+          total travel time required (<code>t_total = distAB / V</code>).
+        </p>
+        <p>
+          The exact trajectory equations executed in real-time to compute the instantaneous target position (\( x_D \),
+          \( y_D \), \( z_D \)) are:
+        </p>
+        <div
+          style="font-size: 1.1rem; text-align: center; margin: 1.5rem 0; overflow-x: auto; padding: 1rem; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 8px;">
+          $$ x_D = \Delta x \frac{t - t_{start}}{t_{total}} + x_a $$
+          $$ y_D = \Delta y \frac{t - t_{start}}{t_{total}} + y_a $$
+          $$ z_D = \Delta z \frac{t - t_{start}}{t_{total}} + z_a $$
         </div>
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="With Dan, Bad.mov" type="video/quicktime">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">Tuning Failures and Joint Instability Trials</p>
-        </div>
-      </div>
+        <p>
+          At every 1 ms control loop iteration, the elapsed time (\( t - t_{start} \)) is checked against \( t_{total}
+          \), and this linear
+          interpolation generates the next intermediate target position.
+          This ensures the end effector traces a perfectly straight line through 3D space at a constant, smooth velocity
+          between every waypoint, <strong>completely
+            eliminating step overshoots</strong> and jerky motor behavior.
+        </p>
+      </article>
+
+
 
       <article class="scrollable-details">
         <h2>Outcome</h2>
-        <p>
-          The <strong>control software</strong> achieved highly <strong>stable tracking responses</strong> under different <strong>dynamic loads</strong>. <strong>Tuning
-            parameters</strong>
-          were optimized to eliminate <strong>step overshoot</strong>, and <strong>impedance modes</strong> successfully softened end-effector
-          interactions when colliding with <strong>boundary constraints</strong>.
-        </p>
+        <p>We passed the final demonstration with flying colors! The project was incredibly rewarding and provided an invaluable hands-on opportunity to learn and apply advanced control methods on physical hardware.</p>
       </article>
 
     </section>

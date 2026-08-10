@@ -5,6 +5,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SLAM Golf Putter - Project Details</title>
+
+  <!-- MathJax for rendering LaTeX math formulas -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <style>
     :root {
       /* Default: Night Mode */
@@ -556,11 +571,11 @@
       <div class="sidebar-section">
         <h3>Project Code</h3>
         <div class="code-links-container">
-          <a href="slam-golf-putter-code.html?file=c" target="_blank" class="code-link-btn">
+          <a href="slam-golf-putter-code.html?file=c" class="code-link-btn">
             <img src="../../images/c_logo.webp" alt="C Logo" class="code-logo-icon" />
             Main Loop (FinalProjMain.c)
           </a>
-          <a href="https://github.com/yuan41/SE423_repo/tree/main/workspace/FinalProject_NM_CE_JY_RW" target="_blank"
+          <a href="https://github.com/yuan41/SE423_repo/tree/main/workspace/FinalProject_NM_CE_JY_RW"
             class="code-link-btn">
             <img src="../../images/github_logo.png" alt="GitHub Logo" class="code-logo-icon" />
             Full Repository
@@ -578,6 +593,7 @@
           <span class="skill-badge">LabVIEW</span>
           <span class="skill-badge">State Machines</span>
           <span class="skill-badge">LiDAR</span>
+          <span class="skill-badge">Low-Level Control</span>
         </div>
       </div>
     </aside>
@@ -592,9 +608,9 @@
           <li><strong>Course &amp; Assignment:</strong> Final project for SE 423 (Mechatronics) where the goal was to
             execute a
             unique robotics project involving <strong>path planning, perception, and control systems</strong></li>
-          <li><strong>Objective:</strong> Utilizing a robotic car, map an arena, autonomously
-            navigate, find a golf ball, and launch it into a cup.</li>
-          <li><strong>My Role:</strong> Focused on SLAM mapping, gradient-descent pathing, state machine logic, and
+          <li><strong>Objective:</strong> Utilize a robotic car to map an arena and autonomously
+            navigate to find a golf ball and launch it into a cup.</li>
+          <li><strong>My Role:</strong> SLAM mapping, gradient-descent navigation, state machine logic, and
             LABVIEW visualization.</li>
         </ul>
       </article>
@@ -605,7 +621,8 @@
           <source src="demo_labview.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Demo with real-time mapping in LABVIEW.</p>
+        <p class="media-caption">Demo with real-time mapping in LABVIEW. Unfortunately this was a miss, though a success
+          can be found lower in the page without a live LABVIEW video.</p>
       </div>
 
       <!-- FSM Section -->
@@ -626,7 +643,7 @@ stateDiagram-v2
     [*] --> State_0: Initialization completed
 
     state "<b>State 0: Map & Search Arena</b><br/>• Follows right wall, avoiding obstacles<br/>• Searches for ball and goal<br/>• Maps ball, goal, obstacles, and walls" as State_0
-    state "<b>State 1: Finish Arena Search</b><br/>• If ball/goal not found yet, employs<br/>grid search of current map<br/>• Maps ball, goal, obstacles, & walls" as State_1
+    state "<b>State 1: Finish Arena Search</b><br/>• If ball/goal not found yet, employ<br/>grid search of current map<br/>• Maps ball, goal, obstacles, & walls" as State_1
     state "<b>State 10: Line Up Shot</b><br/>• Navigate behind ball relative to goal,<br/>avoiding & mapping obstacles<br/>• Turn towards ball" as State_10
     state "<b>State 20: Ball Acquisition</b><br/>• Open kicker cover<br/>• Move forward to position ball<br/>in front of kicker" as State_20
     state "<b>State 21: Drive Towards Goal</b><br/>• Navigate to goal, avoiding<br/>& mapping obstacles<br/>• Lower kicker cover to capture ball<br/>• Approach goal" as State_21
@@ -645,20 +662,109 @@ stateDiagram-v2
       <article class="scrollable-details">
         <h2>Mapping &amp; Exploration</h2>
         <p>
-          High-level supervisory controls and map visualization were handled in real-time. The robot used <strong>LiDAR
-            (LADAR) scans</strong> to identify boundary walls and coordinate obstacles, writing the data into a
-          localized occupancy grid to dynamically track the arena geometry.
+          <strong>Simultaneous Localization and Mapping (SLAM)</strong> was implemented by fusing <strong>dead reckoning
+            odometry</strong> with <strong>LIDAR range scanning</strong>. Localized pose estimation (absolute
+          coordinates $x_{abs}$, $y_{abs}$ in feet and orientation
+          $\theta$
+          in radians) was tracked by integrating optical wheel encoder values and IMU gyro outputs at a high frequency:
+        </p>
+        $$x_{t} = x_{t-1} + \cos(\theta_{t}) \cdot V_{avg} \cdot dt$$
+        $$y_{t} = y_{t-1} + \sin(\theta_{t}) \cdot V_{avg} \cdot dt$$
+        <p>
+          To map the arena, the robot initially executed a proportional <strong>Right Wall Following</strong> algorithm
+          (<code>rightWallFollow()</code>) during <code>State 0</code>. This autonomous wall-tracing routine allowed the
+          LiDAR sensor to sweep the boundaries and construct the outer map outline.
+        </p>
+        <p>
+          The occupancy grid was stored in a 2D integer array of size $101 \times 101$ cells
+          (<code>map[101][101]</code>). <strong>Coordinate transformations</strong> mapped absolute coordinates
+          $(x_{abs}, y_{abs})$ into
+          discrete grid indices $(x_{idx}, y_{idx})$:
+        </p>
+        $$x_{idx} = \text{floor}\left(x_{abs} \cdot 3\right) + 50$$
+        $$y_{idx} = -\text{floor}\left(y_{abs} \cdot 3\right) + 50$$
+        <p>
+          The scaling factor of <code>3</code> (<code>UNIT_MAP1_LEN_INV</code>) yields a resolution of 4 inches per grid
+          cell, while the offset of <code>50</code> shifts the absolute origin $(0, 0)$ to the center of the array.
+        </p>
+        <p>
+          When range measurements identified an obstacle, the corresponding cell was incremented by +9 (capping at
+          +30). To eliminate transient "ghost" obstacles, a ray-clearing function (<code>clearPath()</code>) ran
+          <strong>Bresenham's line algorithm</strong> along the line-of-sight between the robot's current cell and the
+          obstacle hit.
+          Cells traversed by the beam were decremented by -4 (flooring at -30). If a cell's confidence value flipped
+          below 0, it was dynamically cleared.
+        </p>
+        <p>
+          Perception of dynamic target items was handled by a front-mounted camera.
+          The camera used <strong>color-based blob detection</strong> to locate colorful golf balls and <strong>AprilTag
+            detection</strong> to track the scoring goal.
+          When either target was spotted within the camera's field of view, the control loop temporarily stopped forward
+          translation ($V_{ref} = 0.0$) and turned the chassis to center the target in the image frame.
+          Once centered, the robot calculated the absolute range to the target:
+        </p>
+        $$d_{goal} = |tag_z \cdot 0.00425| + \frac{3.5}{12}$$
+        $$d_{ball} = \left(264.2167 - 6.144 \cdot Row + 0.0523 \cdot Row^2 - 0.00015432 \cdot Row^3\right) \cdot
+        0.08333$$
+        <p>
+          Using this distance and the robot's current pose, the system resolved the absolute coordinates:
+        </p>
+        $$x_{target} = x_{abs} + d_{target} \cdot \cos(\theta)$$
+        $$y_{target} = y_{abs} + d_{target} \cdot \sin(\theta)$$
+        <p>
+          Once these coordinates were resolved, the target items were written into the occupancy grid map to dynamically
+          define navigation waypoints.
+        </p>
+        <p>
+          To optimize serial bandwidth, coordinate updates were only queued when their occupancy state sign flipped.
+          These events were pushed to a custom <code>RingBuffer LVbuffer</code> and popped (<code>rb_pop()</code>) to be
+          sent over serial to LabVIEW. Because the updates were queued and transmitted sequentially at a throttled low
+          frequency, the LabVIEW visualization in the video exhibits a distinct lag/delay behind the robot's real-time
+          movement.
         </p>
       </article>
 
-      <!-- Navigation Text -->
+      <!-- Gradient Descent Navigation -->
       <article class="scrollable-details">
         <h2>Gradient Descent Navigation</h2>
         <p>
-          Navigation was driven by a weighted <strong>gradient descent algorithm</strong>. The controller calculated
-          attractive forces pulling the robot toward waypoint coordinates and repulsive forces pushing it away from
-          mapped obstacle regions, steering smooth trajectories around hazards.
+          Autonomous navigation was driven by a virtual <strong>Potential Field Path Planner</strong> implementing
+          gradient descent. During <code>State 1</code> (exploration), <code>State 10</code> (line-up), and
+          <code>State 21</code> (kicking approach), the controller continuously calculated attractive forces pulling the
+          robot toward targeted waypoints and repulsive forces pushing it away from mapped obstacle regions.
         </p>
+        <p>
+          In this path-planning framework, the targeted coordinates act as a <strong>well</strong> (the lowest potential
+          valley, creating a strong attractive pull). Conversely, walls, obstacles, and the golf ball itself act as
+          <strong>peaks</strong> (regions of maximum potential and high cost). The robot will then "roll down the hill",
+          or travel on a path that pushes it from regions of high potential to regions of low potential.
+        </p>
+        <!-- Gradient Descent Video -->
+        <div class="media-container">
+          <video autoplay loop muted playsinline controls style="max-height: 380px; object-fit: contain;">
+            <source src="gradient_descent_in_2d.webm" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+          <p class="media-caption">2D Gradient Descent Simulation. The wells (valleys) represent target
+            positions, while the peaks represent obstacles, walls, and the golf ball to prevent collisions. Source:
+            <a href="https://en.wikipedia.org/wiki/Gradient_descent">Wikipedia</a>
+          </p>
+        </div>
+        <br>
+        <p>
+          The controller solved the cumulative potential gradient at the robot's current position to determine the
+          desired velocity vectors $V_x$ and $V_y$:
+        </p>
+        $$V_x = k_{goal} \cdot (x_{target} - x_{robot}) + \sum \frac{k_{obs}}{2 \cdot d_{obs}^4} \cdot dx_{obs} +
+        \frac{k_{ball}}{2 \cdot d_{ball}^4} \cdot dx_{ball}$$
+        $$V_y = k_{goal} \cdot (y_{target} - y_{robot}) + \sum \frac{k_{obs}}{2 \cdot d_{obs}^4} \cdot dy_{obs} +
+        \frac{k_{ball}}{2 \cdot d_{ball}^4} \cdot dy_{ball}$$
+        <p>
+          By adjusting the velocity command magnitude ($V_{ref}$) and heading rate command ($\omega_{turn}$) to descend
+          this gradient, the robot steered smooth trajectories around obstacles and the ball:
+        </p>
+        $$\theta_{desired} = \text{atan2}(-V_y, V_x)$$
+        $$\omega_{turn} = -k_{turn} \cdot (\theta_{desired} - \theta_{robot})$$
       </article>
 
       <!-- Success Video -->
@@ -667,23 +773,25 @@ stateDiagram-v2
           <source src="demo_success.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Figure 3: Autonomous Path Completion and Successful Putt.</p>
+        <p class="media-caption">Autonomous Path Completion and Successful Putt.</p>
       </div>
 
       <!-- Outcome -->
       <article class="scrollable-details">
         <h2>Outcome</h2>
         <p>
-          The autonomous putter successfully completed its spatial mapping routine and completed <strong>putting
-            trials</strong> with high repeatability. The control software reliably calculated the necessary
-          <strong>launch velocity vector</strong>, correcting for <strong>odometer slip</strong> and drift in real-time.
+          The robot was able to successfully navigate around obstacles, find the golf ball, and putt it into the cup.
+          While the autonomous navigation and aiming worked reliably, the launch mechanism seemed to have a lot of
+          directional variation, leading to unreliable short range putts. That said, I'm very proud of the navigation
+          and SLAM algorithms, and I learned a lot about these algorithms as well as low level control, and I had a
+          great time doing it. Above is a video of the robot successfully putting the ball, and below is my wonderful
+          team :)
         </p>
       </article>
 
       <!-- Team Pic -->
       <div class="media-container">
         <img src="Team Pic.jpg" alt="SLAM Golf Putter team assembly and system testing setup" />
-        <p class="media-caption">Figure 4: SLAM Golf Putter team assembly and system testing setup.</p>
       </div>
 
     </section>

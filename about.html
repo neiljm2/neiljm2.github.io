@@ -164,11 +164,16 @@
       width: 100%;
       margin: 3rem auto;
       padding: 0 1.5rem;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 4rem;
-      align-items: start;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      align-items: center;
       flex-grow: 1;
+    }
+
+    .about-text-column {
+      max-width: 800px;
+      width: 100%;
     }
 
     .about-text-column h1 {
@@ -189,7 +194,7 @@
     /* --- COLLAGE SCAPBOOK STYLE --- */
     /* --- COLLAGE SCAPBOOK STYLE (MASONRY) --- */
     .collage-grid {
-      column-count: 2;
+      column-count: 3;
       column-gap: 1rem;
       width: 100%;
     }
@@ -223,8 +228,6 @@
     /* Mobile Responsive styling */
     @media (max-width: 900px) {
       .about-container {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
         margin: 2rem auto;
       }
       
@@ -303,6 +306,12 @@
       </div>
       <div class="collage-card item-7">
         <img src="images/aboutme_waterfall.jpeg" alt="Scenic waterfall trail hike" />
+      </div>
+      <div class="collage-card item-8">
+        <img src="images/aboutme_internscatksills.JPEG" alt="Neil with interns in Catskills" />
+      </div>
+      <div class="collage-card item-9">
+        <img src="images/aboutme_bridge.jpg" alt="Neil on a bridge" />
       </div>
     </div>
 
