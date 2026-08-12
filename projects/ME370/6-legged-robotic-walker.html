@@ -478,7 +478,7 @@
     </aside>
 
     <!-- CENTER: Main Content (Scrollable Images and Text) -->
-        <section class="project-content">
+    <section class="project-content">
 
       <!-- Interactive 3D Model Viewer -->
       <div class="media-container" style="height: 450px;">
@@ -486,16 +486,82 @@
           shadow-intensity="1" environment-image="neutral"
           style="width: 100%; height: 100%; background-color: var(--img-bg); border-radius: 6px;">
         </model-viewer>
-        <p class="media-caption">Interactive 3D CAD Assembly of Legged Walker (Click and drag to rotate, scroll to zoom).</p>
+        <p class="media-caption">Interactive 3D CAD Assembly of Legged Walker (Click and drag to rotate, scroll to
+          zoom).</p>
       </div>
+
+      <!-- Project Overview -->
+      <article class="scrollable-details">
+        <h2>Project Overview</h2>
+        <p>
+          <li><strong>Course &amp; Context:</strong> Design a functional walking robot for ME 370: Mechanical Design
+          </li>
+          <li><strong>My Role:</strong> Design the crank-slider dispensing mechanism, leg linkages, and ensure
+            everything works together as a cohesive mechanical system</li>
+          <li><strong>Objectives:</strong> Designing a walking robot that could...
+          <li>Carry at least 5 payloads</li>
+          <li>Walk at a pace of 4m/min or greater without dropping payloads</li>
+          <li>Dispense one payload precisely every 2 meters</li>
+          <li>Do so without the use of traditional wheels with one motor operating continuously at constant speed.</li>
+        </p>
+      </article>
+
+      <article class="scrollable-details">
+        <h2>Dispenser Mechanism Design</h2>
+        <p>
+          The robot's dispensing function relies on a custom <strong>slider-crank dispenser mechanism</strong>
+          coordinated with a compound spur gear train. The slider acts as a carriage for a single candy, moving between
+          two positions. At one position, candy drops in from above, where it is then pushed above a hole for the candy
+          to drop it. An
+          <strong>anti-jam spring-loaded door</strong> ensures reliable dispensing without stalled motors. All motion is
+          powered by a
+          single motor; the spur gear train links the walking leg speed to the dispenser crank timing, guaranteeing
+          exactly one candy is dropped every 2 meters of forward travel.
+        </p>
+      </article>
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
+          <source src="crank_slider.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Slider-crank dispenser mechanism.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Puzzle Piece Chassis Assembly</h2>
+        <p>
+          To maintain structural rigidity and allow for precise alignment, the main chassis was designed using a unique
+          <strong>puzzle piece</strong> construction method. The structural plates were laser-cut from acrylic with
+          interlocking tabs. These plates were securely fastened together using <strong>custom 3D printed
+            brackets</strong>
+          fitted with
+          <strong>brass heat-set inserts</strong>. This combination of laser-cut puzzle tabs and threaded inserts
+          provided an extremely
+          strong, easily assembled framework that could withstand the dynamic stresses of the walking motion.
+        </p>
+      </article>
+
+      <div class="media-container">
+        <!-- Removed 'controls' attribute to enforce muting -->
+        <video autoplay loop muted playsinline>
           <source src="cad_assembly.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">CAD Assembly</p>
+        <p class="media-caption">CAD Assembly showing components connecting together.</p>
       </div>
+
+      <article class="scrollable-details">
+        <h2>Leg Linkage Synthesis</h2>
+        <p>
+          Rather than relying on known walking patterns like the Chebyshev, Lambda, or Strandbeest mechanisms, we
+          experimented in <strong>Planar Mechanism Kinematic Simulator (PMKS)</strong> to synthesize a custom
+          crank-rocker
+          linkage with a foot path that fit our liking. This allowed us to specifically define a coupler path that
+          featured a nearly flat bottom portion
+          of the cycle, maximizing stable ground contact and ensuring optimal clearance during the return phase.
+        </p>
+      </article>
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
@@ -505,52 +571,90 @@
         <p class="media-caption">PMKS Linkage Analysis</p>
       </div>
 
+      <article class="scrollable-details">
+        <h2>Walking & Dispensing Performance</h2>
+        <p>
+          The chosen 6-legged design organizes the legs into two groups of three, operating 180 degrees out of phase
+          with each other. This setup guarantees that three legs (forming a <strong>stable triangular contact
+            patch</strong> directly under the robot's center of mass) are always in contact with the floor. During
+          physical testing, the robot walked steadily at approximately 6m/min, successfully dispensing the Starburst
+          payloads at intervals averaging 1.95m.
+        </p>
+      </article>
+
       <div class="media-container">
-        <video autoplay loop muted playsinline controls>
+        <!-- Removed 'controls' attribute to enforce muting -->
+        <video autoplay loop muted playsinline>
           <source src="2m_dispensing.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">2m Dispensing</p>
+        <p class="media-caption">Walker traveling across the floor and dispensing a payload every 2 meters.</p>
       </div>
 
-      <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="slomo_walking.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Slo-Mo Walking</p>
-      </div>
+      <article class="scrollable-details">
+        <h2>Testing & Troubleshooting</h2>
+        <p>
+          Initially, the robot exhibited a consistent "limp" and gradually veered off its intended straight path.
+          Slow-motion analysis revealed that the leg joints were slipping slightly out of phase over time. This was
+          caused by the set screws on the drive shafts not fully penetrating the heat sets, leading to loose joints.
+          After redesigning the joints and implementing longer screws to secure the crank phasing, the unwanted turning
+          behavior was eliminated.
+        </p>
+      </article>
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
           <source src="slomo_out_of_phase.mov" type="video/quicktime">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Slo-Mo Out of Phase</p>
+        <p class="media-caption">Slo-Mo video showing legs slightly out of phase.</p>
       </div>
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
+          <source src="turning_off_course.mp4" type="video/quicktime">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Top view showing the robot turning off course due to phase alignment issues.</p>
+      </div>
+
+      <article class="scrollable-details">
+        <h2>Final Theme & Integration</h2>
+        <p>
+          To add a creative touch, the chassis was hand-painted to look like an octopus, with the six complex walking
+          linkages visually representing crawling tentacles with two more tentacles painted onto the chassis. The main
+          gear train was enclosed securely within the
+          chassis, keeping the attention drawn to the smooth mechanical crawling motion.
+        </p>
+      </article>
+
+      <div class="media-container">
+        <!-- Removed 'controls' attribute to enforce muting -->
+        <video autoplay loop muted playsinline>
           <source src="slomo_painted.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Slo-Mo Painted</p>
+        <p class="media-caption">Final painted design walking in perfect synchronization.</p>
       </div>
 
-      <div class="media-container">
-        <video autoplay loop muted playsinline controls>
-          <source src="turning_off_course.mov" type="video/quicktime">
-          Your browser does not support the video tag.
-        </video>
-        <p class="media-caption">Turning Off Course</p>
-      </div>
+      <article class="scrollable-details">
+        <h2>Outcome</h2>
+        <p>
+          The final project was a huge success. The team met all structural, dimensional, and performance requirements,
+          delivering a fully functional, reliable walking robot that dispensed candy on a strict mechanical timer. The
+          iterative design process provided a fantastic hands-on experience in dealing with dynamic friction, linkage
+          synthesis, and the realities of physical assembly tolerances. One of our final deliverables was
+          a lighthearted team video showcasing our design process, so we got a little goofy with and made a parody of
+          Temu ads we'd seen online. Enjoy :)
+        </p>
+      </article>
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
           <source src="final_pres.mov" type="video/quicktime">
           Your browser does not support the video tag.
         </video>
-        <p class="media-caption">Final Presentation</p>
+        <p class="media-caption">Final Lighthearted Team Presentation</p>
       </div>
 
     </section>
