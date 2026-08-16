@@ -80,6 +80,39 @@
       color: var(--primary-color);
     }
 
+    /* Side-by-Side Nav Links */
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* Button Style for Resume Link in Navbar */
+    .nav-link.resume-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link.resume-btn:hover {
+      background-color: var(--primary-hover);
+      color: #ffffff;
+    }
+
     /* --- THEME TOGGLE SWITCH --- */
     .theme-switch-wrapper {
       display: flex;
@@ -452,6 +485,11 @@
           <span class="moon-icon">🌙</span>
         </div>
       </label>
+    </div>
+    <div class="nav-links">
+      <a href="../../index.html" class="nav-link">Home</a>
+      <a href="../../about.html" class="nav-link">About Me</a>
+      <a href="../../resume.pdf" target="_blank" class="nav-link resume-btn">Resume (PDF)</a>
     </div>
   </nav>
 

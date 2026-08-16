@@ -80,6 +80,39 @@
       color: var(--primary-color);
     }
 
+    /* Side-by-Side Nav Links */
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* Button Style for Resume Link in Navbar */
+    .nav-link.resume-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link.resume-btn:hover {
+      background-color: var(--primary-hover);
+      color: #ffffff;
+    }
+
     /* --- THEME TOGGLE SWITCH --- */
     .theme-switch-wrapper {
       display: flex;
@@ -453,6 +486,11 @@
         </div>
       </label>
     </div>
+    <div class="nav-links">
+      <a href="../../index.html" class="nav-link">Home</a>
+      <a href="../../about.html" class="nav-link">About Me</a>
+      <a href="../../resume.pdf" target="_blank" class="nav-link resume-btn">Resume (PDF)</a>
+    </div>
   </nav>
 
   <!-- PROJECT HEADER -->
@@ -468,12 +506,11 @@
       <div class="sidebar-section">
         <h3>Skills Used</h3>
         <div class="skills-container">
-          <span class="skill-badge">Gearbox Design</span>
-          <span class="skill-badge">Mechanical Transmission</span>
-          <span class="skill-badge">CAD Modeling</span>
-          <span class="skill-badge">Rapid Prototyping</span>
-          <span class="skill-badge">Embedded Systems</span>
-          <span class="skill-badge">SolidWorks</span>
+          <span class="skill-badge">Mechanical Design</span>
+          <span class="skill-badge">Arduino</span>
+          <span class="skill-badge">Mechanical Linkages</span>
+          <span class="skill-badge">Low-Budget Design</span>
+          <span class="skill-badge">Motor Control</span>
         </div>
       </div>
     </aside>
@@ -485,14 +522,13 @@
       <article class="scrollable-details">
         <h2>Project Overview</h2>
         <ul>
-          <li><strong>Course &amp; Context:</strong> Designed as a functional mechatronics build for UIUC's ME 371
-            (Computer Control of Mechanical Systems) course.</li>
-          <li><strong>In-House Design:</strong> Created the multi-ratio gearbox layout, spur gear profiles, and shift
-            mechanical linkages from scratch.</li>
-          <li><strong>My Role:</strong> Led the SolidWorks CAD modeling, gear tolerance math, and rapid-prototyping
-            assembly.</li>
-          <li><strong>Objectives:</strong> Designing a shift gearbox capable of swapping speed and torque on-the-fly
-            under motor load.</li>
+          <li><strong>Course &amp; Context:</strong> Designed as a functional <strong>gear switching robotic car</strong> for <strong>ME 371
+            (Mechanical Design II)</strong>.</li>
+          <li><strong>My Role:</strong> Designed the <strong>gear shifting mechanism</strong>, assisted with designing the <strong>gear train</strong>,
+            wrote the <strong>Arduino script</strong> that allowed the
+            gearing to be set via <strong>remote</strong>, and made <strong>component mounts</strong> for the chassis. </li>
+          <li><strong>Objectives:</strong> Using a <strong>low-power motor</strong>, design a robotic car with a <strong>transmission</strong> optimized
+            for <strong>seven different categories/events</strong>.</li>
         </ul>
       </article>
 
@@ -506,72 +542,63 @@
           zoom).</p>
       </div>
 
+      <div class="media-container">
+        <img src="car_pic.jpeg" alt="Final assembled robotic car" />
+      </div>
+
       <article class="scrollable-details">
         <h2>CAD &amp; Mechanical Linkages</h2>
         <p>
-          The car was <strong>modeled in CAD</strong>, optimizing the <strong>gear tooth profiles</strong> and
-          <strong>chassis mounting plates</strong>
-          for durability. We utilized <strong>3D-printed PLA</strong> gears with <strong>custom tooth spacing</strong>
-          to avoid binding
-          and minimize <strong>transmission friction</strong> under <strong>motor load</strong>. The car layout was
-          developed in
-          <strong>SolidWorks</strong>,
-          validating <strong>linkages and gear ratios</strong>.
+          The heart of this project was the <strong>transmission</strong>. The car needed to be <strong>fast, strong, and agile</strong>, though not all
+          at the same time. This meant we needed to design a system that could change to <strong>highspeed gears</strong> with <strong>low
+          torque</strong>, <strong>slow gears</strong> with <strong>high torque</strong>, a <strong>reverse gear</strong> with medium speed and torque, and it needed to be able to
+          swap gears quickly to excel in the <strong>agility category</strong> while avoiding <strong>jamming</strong>.
+          <br>
+          <br>
+          The most difficult aspect of the transmission design was figuring out how to shift between <strong>5 different gears</strong>
+          with only <strong>2 servos</strong> that had limited power and rotation range. I settled on using a <strong>dog clutch mechanism</strong> to
+          engage the gears, with one servo having <strong>3 positions</strong> (idle, gear 1, and gear 2), and the other servo having <strong>4
+          positions</strong> (idle, gear 3, gear 4, and reverse). The shifter was designed with a relatively simple <strong>sliding
+          mechanical linkage</strong> that converted the rotation of the servos to <strong>linear translation</strong> using a <strong>pin slider</strong> and
+          proper constraints. For each gear, I recorded the angles of both servos required for that gear, then
+          programmed them into an <strong>Arduino script</strong> that would command the servos to rotate to those angles.
         </p>
       </article>
 
-      <!-- Media Cards: Images in folder -->
       <div class="media-container">
-        <img src="IMG_2166.JPEG" alt="Gearbox drivetrain overview" />
-        <p class="media-caption">Figure 1: Close-up of the custom gear transmission and motor mounts.</p>
+        <video autoplay loop muted playsinline controls>
+          <source src="gear_shifter_mechanism.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Dog Clutch Shifter sliding to engage different gears</p>
       </div>
 
-      <div class="media-container">
-        <img src="IMG_8902.jpeg" alt="Chassis assembly side view" />
-        <p class="media-caption">Figure 2: Fully assembled chassis with control boards and battery packs mounted.</p>
-      </div>
-
-      <div class="media-container">
-        <img src="IMG_8906.jpeg" alt="Drivetrain top perspective" />
-        <p class="media-caption">Figure 3: Top perspective of the spur gear configuration and physical shifting
-          linkages.</p>
-      </div>
-
-      <!-- Videos Grid -->
-      <div class="video-grid">
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="IMG_8900.MOV" type="video/quicktime">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">High-Speed Flat Run Testing</p>
-        </div>
-        <div class="media-container">
-          <video autoplay loop muted playsinline controls>
-            <source src="IMG_8901.MOV" type="video/quicktime">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">Gearbox Shifting Transmission Test</p>
-        </div>
-        <div class="media-container" style="grid-column: span 2; width: 50%;">
-          <video autoplay loop muted playsinline controls>
-            <source src="IMG_8903.MOV" type="video/quicktime">
-            Your browser does not support the video tag.
-          </video>
-          <p class="media-caption">Incline Climb Torque Demo</p>
-        </div>
-      </div>
+      <!-- <div class="media-container">
+        <video autoplay loop muted playsinline controls>
+          <source src="close_up.MOV" type="video/quicktime">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Transmission Close-Up</p>
+      </div> -->
 
       <article class="scrollable-details">
         <h2>Outcome</h2>
         <p>
-          The <strong>robotic car</strong> successfully executed <strong>shift commands</strong>, swapping <strong>gear
-            ratios</strong> dynamically while under <strong>drive load</strong>.
-          The <strong>3D-printed transmission</strong> survived <strong>high-torque tests</strong> without shearing
-          teeth, proving the efficacy of budget
-          <strong>rapid-prototyping materials</strong> for <strong>functional gearboxes</strong>.
+          The car performed very well, getting <strong>perfect marks</strong> on <strong>6 of the 7 categories</strong>, and getting <strong>7.5/8</strong> on the last
+          category. This resulted in our team placing <strong>1st in the class</strong>, which we were very proud of. I also learned a
+          lot during this project, especially about <strong>minimizing inefficiencies and friction</strong> and <strong>reducing the complexity</strong>
+          of systems to lower the potential causes of failure.
         </p>
       </article>
+
+      <div class="media-container">
+        <img src="performance.png" alt="Heptathlon Performance Summary" />
+      </div>
+
+      <div class="media-container">
+        <img src="team_pic.JPEG" alt="Team 7 with the George Mobile" />
+
+      </div>
 
     </section>
 
