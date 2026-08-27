@@ -49,6 +49,275 @@
       color: var(--text-primary);
       background-color: var(--bg-color);
       transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- FOOTER STYLES --- */
+    .site-footer {
+      background-color: var(--navbar-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem 2rem;
+      margin-top: auto;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .footer-center {
+      display: flex;
+      justify-content: center;
+    }
+
+    .back-to-top-btn {
+      background-color: var(--surface-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .back-to-top-btn:hover {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--primary-color);
+    }
+
+    .footer-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    @media (max-width: 768px) {
+      .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .footer-right {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    /* --- PROJECT PAGINATION BAR --- */
+    .project-pagination {
+      max-width: 1400px;
+      margin: 2rem auto 3rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .project-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      padding: 1.1rem 1.4rem;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      flex: 1;
+      max-width: 48%;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .project-nav-btn:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .project-nav-btn.prev {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .project-nav-btn.next {
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .project-nav-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: var(--primary-color);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .nav-btn-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-btn-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .nav-btn-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 0.2rem;
+      transition: color 0.2s ease;
+    }
+
+    .project-nav-btn:hover .nav-btn-title {
+      color: var(--primary-color);
+    }
+
+    /* --- SIDE PROJECT NAVIGATION ARROWS (Ultra-wide screens only) --- */
+    .side-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 900;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--surface-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0.85;
+      max-width: 50px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    @media (min-width: 1650px) {
+      .side-nav-arrow {
+        display: flex;
+        left: calc((100vw - 1400px) / 4 - 25px);
+      }
+
+      .side-nav-arrow.next {
+        right: calc((100vw - 1400px) / 4 - 25px);
+        left: auto;
+      }
+    }
+
+    .side-nav-arrow:hover {
+      opacity: 1;
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      max-width: 320px;
+      background-color: var(--surface-bg);
+    }
+
+    .side-nav-arrow.prev {
+      flex-direction: row;
+    }
+
+    .side-nav-arrow.next {
+      flex-direction: row-reverse;
+    }
+
+    .side-nav-arrow.prev:hover {
+      transform: translateY(-50%) translateX(2px);
+    }
+
+    .side-nav-arrow.next:hover {
+      transform: translateY(-50%) translateX(-2px);
+    }
+
+    .side-nav-arrow svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .side-nav-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s ease 0.1s;
+      pointer-events: none;
+    }
+
+    .side-nav-arrow:hover .side-nav-label {
+      opacity: 1;
+    }
+
+    @media (max-width: 640px) {
+      .project-pagination {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .project-nav-btn {
+        max-width: 100%;
+      }
     }
 
     /* --- TOP NAVIGATION BAR --- */
@@ -642,7 +911,7 @@
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
-          <source src="slomo_out_of_phase.mov" type="video/quicktime">
+          <source src="slomo_out_of_phase.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <p class="media-caption">Slo-Mo video showing legs slightly out of phase.</p>
@@ -650,7 +919,7 @@
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
-          <source src="turning_off_course.mp4" type="video/quicktime">
+          <source src="turning_off_course.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <p class="media-caption">Top view showing the robot turning off course due to phase alignment issues.</p>
@@ -689,7 +958,7 @@
 
       <div class="media-container">
         <video autoplay loop muted playsinline controls>
-          <source src="final_pres.mov" type="video/quicktime">
+          <source src="final_pres.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <p class="media-caption">Final Lighthearted Team Presentation</p>
@@ -722,6 +991,61 @@
     </aside>
 
   </main>
+
+  <!-- PROJECT PAGINATION BAR -->
+  <section class="project-pagination">
+    <a href="../ME446/multi-scheme-robotic-arm-control.html" class="project-nav-btn prev">
+      <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+      <div class="nav-btn-text">
+        <span class="nav-btn-label">Previous Project</span>
+        <span class="nav-btn-title">Multi-Scheme Control</span>
+      </div>
+    </a>
+    <a href="../ME371/low-budget-robotic-car.html" class="project-nav-btn next">
+      <div class="nav-btn-text">
+        <span class="nav-btn-label">Next Project</span>
+        <span class="nav-btn-title">Low-Budget Robotic Car</span>
+      </div>
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        &copy; 2026 Neil Maushard
+      </div>
+      <div class="footer-center">
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="back-to-top-btn" aria-label="Return to top of page">
+          &uarr; Back to Top
+        </button>
+      </div>
+      <div class="footer-right">
+        <a href="mailto:maushardn05@gmail.com" class="footer-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          maushardn05@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/neil-maushard" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SIDE PROJECT NAVIGATION ARROWS -->
+  <a href="../ME446/multi-scheme-robotic-arm-control.html" class="side-nav-arrow prev" aria-label="Previous Project: Multi-Scheme Control for Robotic Arm">
+    <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+    <span class="side-nav-label">Multi-Scheme Control</span>
+  </a>
+  <a href="../ME371/low-budget-robotic-car.html" class="side-nav-arrow next" aria-label="Next Project: Low-Budget Gear-Shifting Robotic Car">
+    <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    <span class="side-nav-label">Low-Budget Robotic Car</span>
+  </a>
 
   <!-- IMAGE LIGHTBOX MODAL -->
   <div id="lightbox-modal" class="lightbox-modal">
@@ -923,6 +1247,44 @@
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       return Math.sqrt(dx * dx + dy * dy);
     }
+
+    // --- SCROLL POSITION PERSISTENCE ---
+    const scrollKey = 'scroll_pos_' + window.location.pathname;
+
+    function saveScrollPos() {
+      sessionStorage.setItem(scrollKey, window.scrollY || window.pageYOffset || 0);
+    }
+
+    function restoreScrollPos() {
+      const savedPos = sessionStorage.getItem(scrollKey);
+      if (savedPos !== null && !window.location.hash) {
+        window.scrollTo(0, parseInt(savedPos, 10));
+      }
+    }
+
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('beforeunload', saveScrollPos);
+    window.addEventListener('pagehide', saveScrollPos);
+
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) {
+        const href = a.getAttribute('href');
+        if (href && !href.startsWith('#')) {
+          saveScrollPos();
+        }
+      }
+    });
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(restoreScrollPos, 10);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(restoreScrollPos, 10));
+    }
+    window.addEventListener('pageshow', restoreScrollPos);
   </script>
 
 </body>
